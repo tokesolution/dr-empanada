@@ -46,13 +46,13 @@ export default function Productos() {
             {productos.map((p) => (
               <div
                 key={p.nombre}
-                className="bg-gray-950 rounded-2xl p-7 border border-gray-800 hover:border-orange-500 transition-all hover:-translate-y-1 group"
+                className="bg-black rounded-2xl p-7 border border-gray-800 hover:border-orange-500 transition-all hover:-translate-y-1 group"
               >
                 <div className="text-6xl mb-4 text-center group-hover:scale-110 transition-transform">{p.emoji}</div>
                 <span className={`inline-block border text-xs font-semibold px-3 py-1 rounded-full mb-3 ${categoriaColors[p.categoria]}`}>
                   {p.categoria}
                 </span>
-                <h3 className="text-lg font-bold text-white mb-2">{p.nombre}</h3>
+                <h3 className="text-lg font-bold text-cream mb-2">{p.nombre}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed">{p.desc}</p>
               </div>
             ))}

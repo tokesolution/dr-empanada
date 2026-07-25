@@ -44,11 +44,11 @@ export default function Nosotros() {
             <ScrollReveal className="animate-slide-left">
               <h2 className="text-3xl font-bold text-orange-500 mb-6">Nuestra historia</h2>
               <p className="text-gray-300 mb-5 leading-relaxed text-lg">
-                Dr. Empanada nació en <strong className="text-white">1989</strong> en el corazón de Villa Devoto, Buenos Aires.
+                Dr. Empanada nació en <strong className="text-cream">1989</strong> en el corazón de Villa Devoto, Buenos Aires.
                 Durante más de tres décadas hemos mantenido viva la tradición de la empanada artesanal argentina.
               </p>
               <p className="text-gray-300 mb-5 leading-relaxed text-lg">
-                Desde <strong className="text-white">2006</strong>, bajo la dirección actual, apostamos por la mejora continua:
+                Desde <strong className="text-cream">2006</strong>, bajo la dirección actual, apostamos por la mejora continua:
                 mejores ingredientes, nuevas recetas especiales y un proceso más cuidado, sin perder nunca la esencia artesanal que nos define.
               </p>
               <p className="text-gray-300 leading-relaxed text-lg">
@@ -96,7 +96,7 @@ export default function Nosotros() {
       </section>
 
       {/* ── Galería ── */}
-      <section className="py-20 bg-gray-950">
+      <section className="py-20 bg-black">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center mb-14">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -133,7 +133,7 @@ export default function Nosotros() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {valores.map((v, i) => (
               <ScrollReveal key={v.titulo} delay={i * 100}>
-                <div className="bg-gray-950 rounded-2xl p-8 border border-gray-800 hover:border-orange-500 transition-colors text-center group h-full">
+                <div className="bg-black rounded-2xl p-8 border border-gray-800 hover:border-orange-500 transition-colors text-center group h-full">
                   <div className="text-5xl mb-4 group-hover:scale-110 transition-transform">{v.icon}</div>
                   <h3 className="text-orange-500 font-bold text-lg mb-2">{v.titulo}</h3>
                   <p className="text-gray-400 text-sm leading-relaxed">{v.desc}</p>
@@ -145,7 +145,7 @@ export default function Nosotros() {
       </section>
 
       {/* ── CTA ── */}
-      <section className="py-20 bg-gray-950">
+      <section className="py-20 bg-black">
         <ScrollReveal>
           <div className="max-w-3xl mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold mb-8">

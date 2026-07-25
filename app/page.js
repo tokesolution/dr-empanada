@@ -1,6 +1,31 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import ScrollReveal from '@/components/ScrollReveal'
+import ReviewsSlider from '@/components/ReviewsSlider'
+import { getDb } from '@/lib/db'
+
+export const revalidate = 60
+
+const SEED_REVIEWS = [
+  { autor: 'Daniel Gómez', rating: 5, fecha: 'Hace 2 meses', visible: true, texto: 'La verdad, son super recomendables... Había probado las hechas al horno y hoy probé las fritas... son un manjar. El relleno es más que abundante y muy jugosas. Además los pastelitos ni que decirles. La atención de Matias un 10 !!' },
+  { autor: 'Franco Mantegazza', rating: 5, fecha: 'Hace 5 meses', visible: true, texto: 'Las mejores empanadas souffle del barrio, sin duda voy a volver a pedir. Muy ricos pastelitos también!! 10/10' },
+  { autor: 'Matias Medina', rating: 5, fecha: 'Hace 2 meses', visible: true, texto: 'Excelente lugar en el barrio de devoto para pedir unas ricas empanadas. Fritas o al horno, son una bomba.' },
+  { autor: 'ruso boedo', rating: 5, fecha: 'Hace 2 meses', visible: true, texto: 'Las mejores empanadas y postres. Si están buscando sabor, buena calidad de productos, no duden en pedir acá, riquísimo todo!' },
+  { autor: 'Julián Bellandi', rating: 5, fecha: 'Hace 3 meses', visible: true, texto: 'Excelente, rápido y rico. Vale destacar sus rellenos potentes y la buena atención!!!' },
+]
+
+async function getVisibleReviews() {
+  try {
+    const sql = getDb()
+    const [{ count }] = await sql`SELECT COUNT(*)::int AS count FROM reviews`
+    if (count === 0) {
+      for (const r of SEED_REVIEWS) {
+        await sql`INSERT INTO reviews (autor, texto, rating, fecha, visible) VALUES (${r.autor}, ${r.texto}, ${r.rating}, ${r.fecha}, ${r.visible})`
+      }
+    }
+    return await sql`SELECT * FROM reviews WHERE visible = true ORDER BY id ASC`
+  } catch { return [] }
+}
 
 const featured = [
   { img: '/images/menu/carne-suave.png',   nombre: 'Carne Suave',   desc: 'Carne vacuna, cebolla, huevo duro y aceitunas. Un clásico eterno.' },
@@ -14,44 +39,17 @@ const razones = [
   { icon: '🤌', titulo: 'Masa artesanal', desc: 'Rellenos generosos y masa hecha a mano con dedicación.' },
 ]
 
-export default function Home() {
+export default async function Home() {
+  const reviews = await getVisibleReviews()
   return (
     <>
       {/* ── Hero ── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Video de fondo */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.50]"
-        >
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
-
-        {/* Viñeta cinematográfica */}
-        <div className="absolute inset-0" style={{background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.55) 100%)'}} />
-
-        {/* Barras letterbox estilo cine */}
-        <div className="absolute top-0 left-0 right-0 h-[7vh] bg-black z-10" />
-        <div className="absolute bottom-0 left-0 right-0 h-[7vh] bg-black z-10" />
-
+      <section className="relative min-h-screen flex items-end justify-center overflow-hidden pb-24 sm:pb-32">
         {/* Contenido */}
         <div className="relative z-20 text-center px-4 max-w-4xl mx-auto">
-          <div className="animate-scale-in">
-            <Image
-              src="/images/logo.png"
-              alt="Dr. Empanada Logo"
-              width={130}
-              height={130}
-              className="object-contain mx-auto mb-6 drop-shadow-2xl"
-              priority
-            />
-          </div>
           <h1 className="text-6xl md:text-8xl font-extrabold mb-4 leading-tight animate-fade-in-up delay-100 drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
             <span className="text-orange-500">Dr.</span>
-            <span className="text-white">Empanada</span>
+            <span className="text-cream">Empanada</span>
           </h1>
           <p className="text-orange-400 font-semibold text-lg mb-3 animate-fade-in-up delay-200 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
             Villa Devoto, CABA · Desde 1989
@@ -61,10 +59,8 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up delay-400">
             <Link
-              href="https://wa.me/5491132456209"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full text-lg transition-all transform hover:scale-105 shadow-lg shadow-green-500/30"
+              href="/pedir"
+              className="bg-orange-500 hover:bg-orange-600 text-black font-bold py-4 px-10 rounded-full text-lg transition-all transform hover:scale-105 shadow-lg shadow-orange-500/30"
             >
               📱 Pedí ya
             </Link>
@@ -77,16 +73,10 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Scroll indicator */}
-        <div className="absolute bottom-[8vh] left-1/2 -translate-x-1/2 animate-bounce opacity-70 z-20">
-          <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center pt-2">
-            <div className="w-1 h-2 bg-white/70 rounded-full" />
-          </div>
-        </div>
       </section>
 
       {/* ── Por qué elegirnos ── */}
-      <section className="py-24 bg-gray-950">
+      <section className="py-24 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center mb-14">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -108,6 +98,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Reseñas de Google ── */}
+      {reviews.length > 0 && (
+        <section className="py-24 bg-black">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <ScrollReveal className="text-center mb-14">
+              <h2 className="text-4xl md:text-5xl font-bold mb-4">
+                Lo que dicen <span className="text-orange-500">nuestros clientes</span>
+              </h2>
+              <div className="flex items-center justify-center gap-2 mt-3">
+                <div className="flex gap-0.5">
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg key={i} className="w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <span className="text-gray-400 text-sm">4.5 en Google Maps</span>
+              </div>
+            </ScrollReveal>
+            <ScrollReveal>
+              <ReviewsSlider reviews={reviews} />
+            </ScrollReveal>
+          </div>
+        </section>
+      )}
+
       {/* ── Productos destacados ── */}
       <section className="py-24 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -120,7 +136,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {featured.map((p, i) => (
               <ScrollReveal key={p.nombre} delay={i * 130}>
-                <div className="bg-gray-950 rounded-2xl overflow-hidden border border-gray-800 hover:border-orange-500 transition-all hover:-translate-y-2 group h-full">
+                <div className="bg-black rounded-2xl overflow-hidden border border-gray-800 hover:border-orange-500 transition-all hover:-translate-y-2 group h-full">
                   <div className="relative h-52 overflow-hidden">
                     <Image
                       src={p.img}
@@ -149,7 +165,7 @@ export default function Home() {
       </section>
 
       {/* ── Galería ── */}
-      <section className="py-24 bg-gray-950">
+      <section className="py-24 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center mb-14">
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -158,12 +174,16 @@ export default function Home() {
             <p className="text-gray-400 text-lg">Melincué 4399, Villa Devoto</p>
           </ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {['/images/nosotros/foto1.jpg', '/images/nosotros/foto2.jpg', '/images/nosotros/foto3.jpg'].map((src, i) => (
+            {[
+              { src: '/images/nosotros/foto1.jpg', alt: 'Interior del local de Dr. Empanada en Villa Devoto' },
+              { src: '/images/nosotros/foto2.jpg', alt: 'Equipo y mostrador de Dr. Empanada' },
+              { src: '/images/nosotros/foto3.jpg', alt: 'Empanadas artesanales recién preparadas en Dr. Empanada' },
+            ].map(({ src, alt }, i) => (
               <ScrollReveal key={src} delay={i * 100}>
                 <div className="relative h-64 rounded-2xl overflow-hidden group">
                   <Image
                     src={src}
-                    alt={`Dr. Empanada - foto ${i + 1}`}
+                    alt={alt}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500 brightness-90 group-hover:brightness-100"
                   />
@@ -182,12 +202,10 @@ export default function Home() {
             <h2 className="text-4xl md:text-5xl font-bold text-black mb-4">¿Listo para pedir?</h2>
             <p className="text-black/75 text-xl mb-10">Escribinos por WhatsApp y te atendemos al instante.</p>
             <Link
-              href="https://wa.me/5491132456209"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-black hover:bg-gray-900 text-white font-bold py-4 px-10 rounded-full text-lg transition-all transform hover:scale-105"
+              href="/pedir"
+              className="inline-block bg-black hover:bg-black/80 text-white font-bold py-4 px-10 rounded-full text-lg transition-all transform hover:scale-105"
             >
-              📱 Pedí ya por WhatsApp
+              📱 Pedí ya online
             </Link>
           </div>
         </ScrollReveal>

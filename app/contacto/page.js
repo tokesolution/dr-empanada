@@ -59,12 +59,12 @@ export default function Contacto() {
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-start gap-4 p-5 bg-gray-950 rounded-2xl border border-gray-800 hover:border-orange-500 transition-colors group"
+                    className="flex items-start gap-4 p-5 bg-black rounded-2xl border border-gray-800 hover:border-orange-500 transition-colors group"
                   >
                     <span className="text-2xl">{item.icon}</span>
                     <div>
                       <p className="text-orange-500 font-semibold text-xs uppercase tracking-widest mb-0.5">{item.label}</p>
-                      <p className="text-white group-hover:text-orange-400 transition-colors">{item.value}</p>
+                      <p className="text-cream group-hover:text-orange-400 transition-colors">{item.value}</p>
                     </div>
                   </Link>
                 ))}

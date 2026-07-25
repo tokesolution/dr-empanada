@@ -8,11 +8,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          orange: '#FF6600',
-          'orange-dark': '#CC5200',
-          'orange-light': '#FF8533',
+        orange: {
+          400: '#FFB133',
+          500: '#FF9900',
+          600: '#e68a00',
+          900: '#331f00',
         },
+        cream: '#FFF8EE',
       },
     },
   },

@@ -10,7 +10,7 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-950 border-t border-orange-900 text-white py-14">
+    <footer className="bg-black/80 border-t border-orange-900 text-cream py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
@@ -18,7 +18,7 @@ export default function Footer() {
               <Image src="/images/logo.png" alt="Dr. Empanada" width={52} height={52} className="object-contain" />
               <p className="text-2xl font-extrabold">
                 <span className="text-orange-500">Dr.</span>
-                <span className="text-white">Empanada</span>
+                <span className="text-cream">Empanada</span>
               </p>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-5">
@@ -82,7 +82,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-10 pt-8 text-center text-gray-600 text-sm">
+        <div className="border-t border-gray-800 mt-10 pt-8 text-center text-cream/40 text-sm">
           © {new Date().getFullYear()} Dr. Empanada · Villa Devoto, CABA · Desde 1989
         </div>
       </div>

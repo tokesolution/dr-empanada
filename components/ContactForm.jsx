@@ -5,15 +5,27 @@ export default function ContactForm() {
   const [form, setForm] = useState({ nombre: '', email: '', mensaje: '' })
   const [enviado, setEnviado] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    await new Promise((r) => setTimeout(r, 800))
-    setLoading(false)
-    setEnviado(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error()
+      setEnviado(true)
+    } catch {
+      setError('No se pudo enviar el mensaje. Intentá de nuevo.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   if (enviado) {
@@ -43,7 +55,7 @@ export default function ContactForm() {
           value={form.nombre}
           onChange={handleChange}
           placeholder="Tu nombre"
-          className="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors"
+          className="w-full bg-black border border-gray-700 rounded-xl px-4 py-3 text-cream placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors"
         />
       </div>
       <div>
@@ -55,7 +67,7 @@ export default function ContactForm() {
           value={form.email}
           onChange={handleChange}
           placeholder="tu@email.com"
-          className="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors"
+          className="w-full bg-black border border-gray-700 rounded-xl px-4 py-3 text-cream placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors"
         />
       </div>
       <div>
@@ -67,9 +79,12 @@ export default function ContactForm() {
           value={form.mensaje}
           onChange={handleChange}
           placeholder="¿En qué te podemos ayudar?"
-          className="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors resize-none"
+          className="w-full bg-black border border-gray-700 rounded-xl px-4 py-3 text-cream placeholder-gray-600 focus:outline-none focus:border-orange-500 transition-colors resize-none"
         />
       </div>
+      {error && (
+        <p className="text-red-400 text-sm text-center">{error}</p>
+      )}
       <button
         type="submit"
         disabled={loading}

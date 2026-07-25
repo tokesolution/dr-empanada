@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin
+Disallow: /pedir/pago-exitoso
+Disallow: /pedir/pago-fallido
+Disallow: /pedir/pago-pendiente
+Allow: /
+
+Sitemap: https://dr-empanada.vercel.app/sitemap.xml

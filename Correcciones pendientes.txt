@@ -1,0 +1,2 @@
+1- El carrito no debe verse en /admin.
+
