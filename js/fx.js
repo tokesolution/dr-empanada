@@ -605,7 +605,7 @@
      ============================================================ */
   var LOGO_SVG =
     '<span class="bfx-logobadge" style="font-size:13px">' +
-    '<img src="assets/logo.png" alt="Dr. Empanada" width="100" height="100">' +
+    '<img src="assets/logo.webp" alt="Dr. Empanada" width="100" height="100">' +
     '</span>';
 
   FX.pageWipe = function (onCover) {

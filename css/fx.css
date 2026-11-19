@@ -257,38 +257,64 @@ body.bfx-home .grain{ opacity:.35; }
 .bfx-eyes{ position:absolute; pointer-events:none; }
 
 /* ---------- secciones ---------- */
+/* HERO en una sola pantalla: [titular | títere] y la palabra gigante abajo.
+   El header (72px) es sticky y ocupa lugar en el flujo, por eso el alto es
+   100svh - 72px. Los tamaños usan min(vw, svh): en monitores anchos pero
+   bajos manda el alto y todo sigue entrando sin scrollear. */
 .bfx-hero{
-  min-height: 100svh;
+  min-height: max(560px, calc(100svh - 72px));
   display:flex; flex-direction:column; justify-content:center;
-  padding: 120px 0 0;
+  /* arriba deja lugar al sello que cuelga del header */
+  padding: clamp(48px, 7svh, 70px) 0 clamp(14px, 2.4svh, 28px);
   overflow: clip;
 }
-.bfx-hero-stage{ position:relative; width:100%; max-width:1500px; margin:0 auto; padding: 0 24px; }
-.bfx-hero-title{ position:relative; z-index:3; text-align:center; user-select:none; }
-/* El títere va ARRIBA del titular, en el flujo y grande: es lo primero que
-   se ve al entrar. El título quedó debajo, sin nada encima que lo tape. */
+.bfx-hero-grid{
+  position:relative; z-index:2;
+  width:100%; max-width: 1320px; margin: 0 auto; padding: 0 clamp(20px, 3vw, 40px);
+  display:grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+  align-items:center; gap: clamp(20px, 3vw, 56px);
+}
+.bfx-hero-text{ position:relative; z-index:3; user-select:none; }
+.bfx-hero-h1{
+  margin-top: clamp(8px, 1.4svh, 16px);
+  font-size: clamp(46px, min(6.4vw, 10.6svh), 118px);
+  line-height: .86;
+}
+.bfx-hero-lead{ max-width: 520px; margin: clamp(14px, 2.4svh, 26px) 0 0; }
+.bfx-hero-ctas{
+  display:flex; flex-wrap:wrap; align-items:center; gap: 14px 22px;
+  margin-top: clamp(18px, 3svh, 32px);
+}
+/* botón secundario: pill delineado en tinta clara */
+.bfx-ghostbtn{
+  font-family: var(--bfx-round); font-weight: 800; font-size: clamp(15px, 1.3vw, 18px);
+  letter-spacing: .03em; text-transform: uppercase;
+  color: var(--bfx-ink); background: transparent; cursor: pointer;
+  border: 2.5px solid rgba(246,232,210,.7); border-radius: 100px;
+  padding: .7em 1.4em .62em;
+  transition: scale .18s var(--ease-out), background .15s, color .15s, border-color .15s;
+}
+.bfx-ghostbtn:hover{ scale: 1.05; background: var(--bfx-ink); color: var(--bfx-deep); border-color: var(--bfx-ink); }
+.bfx-ghostbtn:active{ scale: .96; }
+
+/* el títere baja un poco para pisar la palabra gigante sin que la palabra
+   suba hasta los botones de la columna de texto */
+.bfx-hero-puppet{ position:relative; justify-self:center; transform: translateY(clamp(24px, 6svh, 64px)); }
 .bfx-hero-burger{
   position:relative; z-index:2;
-  width: clamp(240px, 30vw, 460px); aspect-ratio: .92;
-  margin: 0 auto clamp(20px, 2.6vw, 38px);
+  width: clamp(230px, min(32vw, 50svh), 470px); aspect-ratio: .92;
 }
+/* la palabra va detrás y el títere le pisa el borde de arriba */
 .bfx-hero-word{
   position:relative; z-index:1; text-align:center;
-  margin-top: clamp(-20px, -1.5vw, -44px);
+  margin-top: clamp(14px, 3svh, 34px);
   /* a 78px+ el Modak respira solo: sin trazo que le adelgace los palos */
   --bfx-counter: transparent;
-  font-size: clamp(78px, 15vw, 260px);
+  font-size: clamp(76px, min(15vw, 21svh), 250px);
   color: var(--bfx-mustard);
   line-height:.72;
   user-select:none;
 }
-.bfx-hero-copy{
-  position:relative; z-index:3;
-  display:flex; justify-content:space-between; gap:24px;
-  max-width: 1500px; margin: clamp(40px, 5vw, 76px) auto 0; padding: 10px 34px 34px;
-}
-.bfx-hero-copy p{ max-width: 330px; margin:0; }
-.bfx-hero-copy p:last-child{ text-align:right; }
 
 /* Sección oscura (la experiencia / hero de contacto).
    Su fondo es --bfx-dark-sec, NO --bfx-red: todo lo que la acompaña (los
@@ -337,22 +363,68 @@ body.bfx-home .grain{ opacity:.35; }
   font-size: clamp(24px, 3vw, 40px); letter-spacing:.02em;
   color: var(--bfx-mustard);
 }
-.bfx-saborchips{
-  display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
-  margin-top: clamp(24px, 3vw, 40px); position:relative; z-index:3;
+/* carrusel al centro y los sabores desordenados a izquierda y derecha.
+   Cada chip trae --dx (corrimiento hacia afuera) y --rot desde home.jsx. */
+.bfx-saborlayout{
+  display:grid; grid-template-columns: minmax(0,1fr) minmax(0, 560px) minmax(0,1fr);
+  align-items:center; gap: clamp(44px, 5vw, 90px);
+  margin-top: clamp(30px, 4vw, 60px);
 }
-.bfx-saborchips .bfx-chip{ cursor:pointer; transition: scale .15s var(--ease-out), background .15s, color .15s; }
-.bfx-saborchips .bfx-chip:hover{ scale: 1.05; }
+.bfx-saborlayout .bfx-saborslider{ grid-column: 2; grid-row: 1; margin-top: 0; }
+.bfx-saborlayout .bfx-saborslider .stage{ width: 100%; }
+.bfx-saborside{
+  grid-row: 1; position:relative; z-index:3;
+  display:flex; flex-direction:column; gap: clamp(10px, 1.4vw, 18px);
+}
+.bfx-saborside.left{ grid-column: 1; align-items:flex-end; }
+.bfx-saborside.right{ grid-column: 3; align-items:flex-start; }
+.bfx-saborchip{
+  cursor:pointer; white-space:nowrap;
+  transform: translateX(var(--dx, 0px)) rotate(var(--rot, 0deg));
+  transition: transform .2s var(--ease-out), background .15s, color .15s, box-shadow .2s;
+  box-shadow: 0 10px 22px -12px rgba(0,0,0,.7);
+}
+/* en la columna izquierda "afuera" es hacia la izquierda */
+.bfx-saborside.left .bfx-saborchip{ transform: translateX(calc(-1 * var(--dx, 0px))) rotate(var(--rot, 0deg)); }
+.bfx-saborchip:hover{ background: rgba(242,144,13,.18); border-color: var(--bfx-mustard); }
+.bfx-saborside .bfx-saborchip.bfx-chip--solid{
+  background: var(--bfx-mustard); border-color: var(--bfx-mustard); color: var(--bfx-deep);
+  box-shadow: 0 12px 26px -10px rgba(242,144,13,.7);
+}
+.bfx-saborside.left .bfx-saborchip.bfx-chip--solid{ transform: translateX(calc(-1 * var(--dx, 0px))) rotate(var(--rot, 0deg)) scale(1.12); }
+.bfx-saborside.right .bfx-saborchip.bfx-chip--solid{ transform: translateX(var(--dx, 0px)) rotate(var(--rot, 0deg)) scale(1.12); }
+/* tablet/celu/laptop chica: no hay ancho para tres columnas (los chips
+   chocaban con los guantes a 1024px) → el carrusel arriba y los
+   sabores debajo, pero siguen sueltos y girados (sin corrimiento lateral) */
+@media (max-width: 1180px){
+  .bfx-saborlayout{ grid-template-columns: 1fr; gap: 14px; }
+  .bfx-saborlayout .bfx-saborslider{ grid-column: 1; grid-row: 1; width: min(560px, 84vw); margin: 0 auto 14px; }
+  .bfx-saborside{ grid-column: 1 !important; grid-row: auto; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center !important; gap: 12px; }
+  .bfx-saborside .bfx-saborchip,
+  .bfx-saborside.left .bfx-saborchip{ transform: rotate(var(--rot, 0deg)); }
+  .bfx-saborside.left .bfx-saborchip.bfx-chip--solid,
+  .bfx-saborside.right .bfx-saborchip.bfx-chip--solid{ transform: rotate(var(--rot, 0deg)) scale(1.08); }
+}
 
 /* sección mostaza (delivery) */
 .bfx-mustardsec{ background: var(--bfx-mustard); }
 /* sobre el amarillo de marca el contorno blanco casi no se ve: acá el
    titular outline se dibuja con el marrón de marca. */
 .bfx-mustardsec .bfx-giant--outline{ -webkit-text-stroke-color: var(--bfx-deep); }
+/* delivery: texto a la izquierda, mapa a la derecha */
+.bfx-deliv-grid{
+  display:grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items:center; gap: clamp(24px, 4vw, 64px);
+}
+@media (max-width: 860px){
+  .bfx-deliv-grid{ grid-template-columns: 1fr; }
+}
+/* franja del recorrido: baja (antes 440px) para que entre en pantalla
+   junto con el mapa. Los chips y la moto van en %, así que se acomodan. */
 .bfx-routebox{
   position:relative;
-  height: clamp(300px, 30vw, 440px);
-  margin-top: clamp(30px, 4vw, 56px);
+  height: clamp(150px, min(15vw, 24svh), 230px);
+  margin-top: clamp(14px, 2svh, 28px);
 }
 .bfx-routebox > svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
 .bfx-routebox .bfx-rider{
@@ -380,12 +452,12 @@ body.bfx-home .grain{ opacity:.35; }
 }
 /* mapa del local */
 .bfx-mapcard{
-  margin: clamp(28px, 4vw, 54px) auto 0; max-width: 940px;
+  margin: 0; width: 100%;
   background:#fff; border:5px solid #fff; border-radius: 20px; overflow:hidden;
   box-shadow: 0 26px 60px -22px rgba(43,20,3,.45);
   line-height:0;
 }
-.bfx-mapcard iframe{ width:100%; height: clamp(260px, 32vw, 420px); border:0; display:block; }
+.bfx-mapcard iframe{ width:100%; height: clamp(240px, min(28vw, 40svh), 380px); border:0; display:block; }
 
 /* barra (cervezas) */
 .bfx-bar{ background: var(--bfx-bordo); color:#f6e8d2; }
@@ -573,14 +645,17 @@ body.bfx-home .grain{ opacity:.35; }
 }
 .bfx-logobadge img{
   width:100%; height:100%; display:block; border-radius:50%;
-  /* el origen es de 100px: suaviza el reescalado en vez de pixelarlo */
+  /* el origen es de 512px: se ve nítido incluso en pantallas retina */
   image-rendering: auto;
 }
 
-/* sello del header: crece al pasar el mouse */
+/* sello del header: crece al pasar el mouse.
+   El origen del scale es el BORDE DE ARRIBA: así crece sólo hacia abajo y
+   nunca se sale por el tope de la ventana (antes, con origin center, el
+   hover lo empujaba por encima del borde y se veía cortado). */
 .bfx-logolink .bfx-logobadge{
-  transition: transform .3s var(--ease-out), box-shadow .3s var(--ease-out);
-  transform-origin: center;
+  transition: transform .35s var(--ease-out), box-shadow .3s var(--ease-out);
+  transform-origin: 50% 0;
 }
 /* En desktop el sello va centrado y SOBRESALE de la barra (cuelga por debajo).
    En mobile no se toca: sigue siendo el primer elemento de la fila, a la
@@ -589,25 +664,32 @@ body.bfx-home .grain{ opacity:.35; }
   .bfx-logolink{
     position: absolute;
     left: 50%;
-    top: 6px;
+    top: 12px;
     transform: translateX(-50%);
     z-index: 3;
   }
   .bfx-logolink .bfx-logobadge{
-    width: 108px; height: 108px;
-    box-shadow: 0 14px 30px -10px rgba(0,0,0,.65);
+    width: 104px; height: 104px;
+    /* aro negro que lo despega de la barra + sombra hacia abajo */
+    outline: 4px solid var(--bfx-cream);
+    outline-offset: 0;
+    box-shadow: 0 0 0 6px rgba(242,144,13,.55), 0 18px 34px -12px rgba(0,0,0,.75);
   }
 }
 /* desktop angosto: achicar el sello para que no choque con la nav */
 @media (min-width: 901px) and (max-width: 1120px){
-  .bfx-logolink{ top: 8px; }
-  .bfx-logolink .bfx-logobadge{ width: 88px; height: 88px; }
+  .bfx-logolink{ top: 12px; }
+  .bfx-logolink .bfx-logobadge{ width: 86px; height: 86px; }
 }
 .bfx-logolink:hover .bfx-logobadge{
-  transform: scale(1.14);
-  box-shadow: 0 1em 2.4em -0.6em rgba(0,0,0,.55);
+  transform: scale(1.1) rotate(-4deg);
 }
-.bfx-logolink:active .bfx-logobadge{ transform: scale(1.06); }
+@media (min-width: 901px){
+  .bfx-logolink:hover .bfx-logobadge{
+    box-shadow: 0 0 0 6px rgba(242,144,13,.9), 0 24px 40px -12px rgba(0,0,0,.8);
+  }
+}
+.bfx-logolink:active .bfx-logobadge{ transform: scale(1.04); }
 @media (prefers-reduced-motion: reduce){
   .bfx-logolink .bfx-logobadge{ transition: none; }
   .bfx-logolink:hover .bfx-logobadge{ transform: none; }
@@ -923,12 +1005,16 @@ html.bfx-nofx [data-split]{ visibility:visible !important; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 860px){
-  .bfx-hero{ padding-top: 92px; }
-  .bfx-hero-burger{ width: 64vw; }
-  .bfx-hero-word{ font-size: 23vw; margin-top: 2vw; }
+  /* hero apilado: títere arriba, titular centrado, palabra abajo */
+  .bfx-hero{ padding-top: 28px; min-height: 0; }
+  .bfx-hero-grid{ grid-template-columns: 1fr; gap: 18px; text-align:center; }
+  .bfx-hero-puppet{ order: -1; transform: none; }
+  .bfx-hero-burger{ width: min(58vw, 36svh); }
+  .bfx-hero-h1{ font-size: clamp(42px, 11.5vw, 84px); }
+  .bfx-hero-lead{ margin-left:auto; margin-right:auto; }
+  .bfx-hero-ctas{ justify-content:center; }
+  .bfx-hero-word{ font-size: 21vw; margin-top: 18px; }
   .bfx-badge{ font-size: 15px; border-width: 2.5px; }
-  .bfx-hero-copy{ flex-direction:column; gap: 16px; padding-bottom: 26px; margin-top: 30px; }
-  .bfx-hero-copy p, .bfx-hero-copy p:last-child{ max-width: none; text-align:left; }
   .bfx-polaroid-row{ flex-direction: column; align-items:center; }
   .bfx-footer-info{ grid-template-columns: 1fr 1fr; gap: 22px; }
   .bfx-footer-main{ text-align: center; }

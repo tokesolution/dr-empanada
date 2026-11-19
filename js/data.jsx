@@ -208,10 +208,10 @@ const REVIEWS = [
 ];
 
 /* ============================================================
-   Logo — sello oficial de Dr. Empanada (assets/logo.png).
+   Logo — sello oficial de Dr. Empanada (assets/logo.webp, 512px — el png de 100px se veía borroso).
    Viene de la cuenta de la marca, ya recortado en círculo con alfa.
    ============================================================ */
-const LOGO_SRC = "assets/logo.png";
+const LOGO_SRC = "assets/logo.webp";
 
 function Empanada({ size = 34 }) {
   return (
@@ -227,7 +227,7 @@ function LogoBadge({ fontSize = 8, rot = 0, className = "", style, ...rest }) {
   return (
     <span className={"bfx-logobadge " + className} {...rest}
       style={{ fontSize, "--rot": rot + "deg", transform: rot ? `rotate(${rot}deg)` : undefined, ...style }}>
-      <img src={LOGO_SRC} alt="Dr. Empanada" width="100" height="100" />
+      <img src={LOGO_SRC} alt="Dr. Empanada" width="512" height="512" decoding="async" />
     </span>
   );
 }

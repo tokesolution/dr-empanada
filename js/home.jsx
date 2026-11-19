@@ -67,6 +67,14 @@ function Glove({ side = "left", style, ...rest }) {
 
 const HERO_IMG = "assets/hero-empanada.jpg";
 
+/* Corrimiento (px, SIEMPRE hacia afuera: si va hacia adentro choca con los
+   guantes del carrusel) y giro de cada chip de sabor,
+   para que queden "desordenados" a los costados. [0] = izquierda, [1] = derecha. */
+const SCATTER = [
+  [{ dx: 24, rot: -6 }, { dx: 0, rot: 4 }, { dx: 42, rot: -2 }, { dx: 8, rot: 7 }, { dx: 50, rot: -5 }, { dx: 4, rot: 3 }, { dx: 30, rot: -8 }],
+  [{ dx: 6, rot: 5 }, { dx: 40, rot: -4 }, { dx: 0, rot: 6 }, { dx: 30, rot: -7 }, { dx: 8, rot: 3 }, { dx: 46, rot: -3 }],
+];
+
 /* ============================================================
    SLIDER DE SABORES — el "títere" de la sección Nuestro Menú.
    Las fotos se cruzan con opacidad dentro del mismo blob para que
@@ -154,44 +162,49 @@ function Home({ go }) {
   return (
     <main ref={ref} className="bfx">
 
-      {/* ================= HERO ================= */}
+      {/* ================= HERO =================
+          Una sola pantalla: titular + títere + palabra gigante. Antes eran
+          dos pantallas (el títere arriba y el titular abajo) y había que
+          scrollear para ver la propuesta completa. Todo se dimensiona con
+          min(vw, svh) para que entre a lo alto en cualquier monitor. */}
       <section className="bfx-hero" aria-label="Dr. Empanada">
-        <div className="bfx-hero-stage">
-          {/* el títere manda: va arriba, grande y en el flujo del documento.
-              El titular pasó abajo (antes el personaje le tapaba una línea). */}
-          <div className="bfx-hero-burger" data-pop data-pop-delay=".35" data-inertia>
-            <div className="bfx-blobphoto" data-idle style={{ width: "100%", height: "100%" }}>
-              <img src={HERO_IMG} alt="Empanada de carne cuchillo de Dr. Empanada" fetchPriority="high" />
-            </div>
-            <GooglyEyes style={{ left: "22%", top: "8%", width: "56%" }} />
-          </div>
-
-          <div className="bfx-hero-title">
-            <h1 className="bfx-giant bfx-giant--xl" aria-label="Somos Dr. Empanada y somos riquísimos" style={{ position: "relative" }}>
-              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>SOMOS</span>
-              {/* el sello vive sólo en el header; acá la marca va en texto */}
-              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>DR. EMPANADA</span>
-              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>Y SOMOS <span className="ylw">RIQUÍSIMOS.</span></span>
+        <div className="bfx-hero-grid">
+          <div className="bfx-hero-text">
+            <div className="bfx-kicker" data-pop>★ EL ESPECIALISTA EN SABOR ★</div>
+            <h1 className="bfx-giant bfx-hero-h1" aria-label="Receta del doctor: una docena bien calentita">
+              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>RECETA DEL DOCTOR:</span>
+              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}><span className="ylw">UNA DOCENA</span></span>
+              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>BIEN CALENTITA.</span>
             </h1>
+            <p className="bfx-copy bfx-hero-lead" data-split="lines">
+              Masa casera estirada en el día, rellenos generosos y el repulgue a mano de siempre. Al horno o fritas, con delivery propio por Villa Devoto.
+            </p>
+            <div className="bfx-hero-ctas" data-pop data-pop-delay=".6">
+              <a href="#/menu" className="bfx-blob" data-squash>Pedir online</a>
+              <button type="button" className="bfx-ghostbtn"
+                onClick={() => { const el = document.getElementById("bfx-sabores"); if (!el) return; if (window.FX && FX.scrollTo) FX.scrollTo(el); else el.scrollIntoView({ behavior: "smooth" }); }}>
+                Ver sabores ↓
+              </button>
+            </div>
+          </div>
+
+          {/* el títere: la empanada con ojos, con los sellos alrededor */}
+          <div className="bfx-hero-puppet">
+            <div className="bfx-hero-burger" data-pop data-pop-delay=".35" data-inertia>
+              <div className="bfx-blobphoto" data-idle style={{ width: "100%", height: "100%" }}>
+                <img src={HERO_IMG} alt="Empanada de carne cuchillo de Dr. Empanada" fetchPriority="high" />
+              </div>
+              <GooglyEyes style={{ left: "22%", top: "8%", width: "56%" }} />
+            </div>
             <span className="bfx-badge bfx-badge--green" data-pop data-pop-delay=".9" data-idle
-              style={{ "--rot": "-9deg", position: "absolute", left: "3%", top: "-16%", zIndex: 3 }}>REPULGUE A MANO</span>
+              style={{ "--rot": "-9deg", position: "absolute", left: "-4%", bottom: "16%", zIndex: 3 }}>REPULGUE A MANO</span>
             <span className="bfx-badge" data-pop data-pop-delay="1.05" data-idle
-              style={{ "--rot": "7deg", position: "absolute", right: "3%", top: "-8%", zIndex: 3 }}>DESDE 1989</span>
+              style={{ "--rot": "8deg", position: "absolute", right: "-2%", top: "6%", zIndex: 3 }}>DESDE 1989</span>
           </div>
         </div>
 
-        {/* palabra gigante de fondo */}
+        {/* palabra gigante de fondo: el títere le pisa el borde */}
         <div className="bfx-hero-word bfx-bubble" aria-hidden="true" data-pop data-pop-delay=".4">EMPANADAS</div>
-
-        {/* TODO(Fappi): reemplazar este copy por el definitivo. */}
-        <div className="bfx-hero-copy">
-          <p className="bfx-copy" data-split="lines">
-            Masa casera estirada en el día y rellenos generosos que se cocinan a fuego lento. Empanadas de verdad, desde 1989.
-          </p>
-          <p className="bfx-copy" data-split="lines">
-            Al horno o fritas, con el repulgue hecho a mano de siempre. Y pastelitos crocantes para cerrar como se debe.
-          </p>
-        </div>
       </section>
 
       {/* ================= MARQUEE ================= */}
@@ -234,7 +247,7 @@ function Home({ go }) {
       </section>
 
       {/* ================= NUESTRO MENÚ (negro) ================= */}
-      <section className="bfx-red" style={{ paddingTop: "clamp(60px,7vw,110px)", paddingBottom: "clamp(50px,6vw,90px)", overflow: "clip" }} aria-label="Nuestro menú">
+      <section id="bfx-sabores" className="bfx-red" style={{ paddingTop: "clamp(60px,7vw,110px)", paddingBottom: "clamp(50px,6vw,90px)", overflow: "clip" }} aria-label="Nuestro menú">
         <div className="wrap" style={{ textAlign: "center", position: "relative" }}>
           <Sticker name="fries" size={110} data-pop data-idle style={{ position: "absolute", left: "2%", top: -30, "--rot": "-14deg" }} />
           <Sticker name="beer" size={110} data-pop data-idle style={{ position: "absolute", right: "3%", top: 60, "--rot": "10deg" }} />
@@ -246,36 +259,64 @@ function Home({ go }) {
             Deslizá para conocer nuestros sabores.
           </p>
 
-          {/* el títere ahora es un slider: una foto por sabor */}
-          <SaborSlider index={sabor} onIndex={setSabor} />
-
-          {/* los chips bajaron: van DEBAJO del personaje y listan los 13 sabores */}
-          <div className="bfx-saborchips">
-            {empanadas.map((it, i) => (
-              <button key={it.id} type="button"
-                className={"bfx-chip" + (i === sabor ? " bfx-chip--solid" : "")}
-                aria-pressed={i === sabor}
-                onClick={() => setSabor(i)}>{it.name}</button>
+          {/* el títere es un slider (una foto por sabor) y los 13 sabores
+              van "desordenados" a los costados: mitad a la izquierda y
+              mitad a la derecha, cada chip con su propio corrimiento y giro.
+              En celu se apilan debajo (ver .bfx-saborlayout en fx.css). */}
+          <div className="bfx-saborlayout">
+            {[empanadas.slice(0, Math.ceil(empanadas.length / 2)), empanadas.slice(Math.ceil(empanadas.length / 2))].map((col, side) => (
+              <div key={side} className={"bfx-saborside " + (side === 0 ? "left" : "right")}>
+                {col.map((it, k) => {
+                  const i = side === 0 ? k : k + Math.ceil(empanadas.length / 2);
+                  const s = SCATTER[side][k % SCATTER[side].length];
+                  return (
+                    <button key={it.id} type="button"
+                      className={"bfx-chip bfx-saborchip" + (i === sabor ? " bfx-chip--solid" : "")}
+                      style={{ "--dx": s.dx + "px", "--rot": s.rot + "deg" }}
+                      aria-pressed={i === sabor}
+                      onClick={() => setSabor(i)}>{it.name}</button>
+                  );
+                })}
+              </div>
             ))}
+            <SaborSlider index={sabor} onIndex={setSabor} />
           </div>
         </div>
       </section>
 
       {/* ================= DELIVERY (mostaza) ================= */}
-      <section className="bfx-mustardsec" style={{ padding: "0 0 clamp(70px,8vw,120px)", overflow: "clip" }} aria-label="Delivery por Villa Devoto y alrededores">
+      <section className="bfx-mustardsec" style={{ padding: "0 0 clamp(36px,4vw,64px)", overflow: "clip" }} aria-label="Delivery por Villa Devoto y alrededores">
         {/* la entrada al naranja va con wave. El background del wave tiene que
             ser el de la sección de ARRIBA (#191510) o se ve el escalón. */}
         <Wave fill="#f2900d" style={{ background: "#191510", position: "relative", zIndex: 3 }} />
 
-        <div className="wrap" style={{ position: "relative", zIndex: 2, paddingTop: "clamp(30px,4vw,60px)" }}>
-          <div className="bfx-kicker" data-pop>DELIVERY PROPIO + TAKE AWAY</div>
-          <h2 className="bfx-giant bfx-giant--lg bfx-giant--outline" style={{ marginTop: 14, textAlign: "left" }}>
-            <span data-split="chars" style={{ display: "block" }}>DE LA COCINA</span>
-            <span data-split="chars" style={{ display: "block" }}>A TU PUERTA/MESA</span>
-          </h2>
-          <p className="bfx-copy" data-split="lines" style={{ maxWidth: 520, marginTop: 22, color: "#4a2c00" }}>
-            Salen calentitas del horno y llegan calentitas a tu casa: repartidores propios, sin apps de por medio. ¿Estás cerca? Pasá a buscarlas por {BIZ.address}.
-          </p>
+        {/* Todo entra en una pantalla: arriba texto + mapa lado a lado, y
+            abajo la franja del recorrido con los barrios. Antes iba todo
+            apilado y el mapa quedaba fuera de la vista. */}
+        <div className="wrap" style={{ position: "relative", zIndex: 2, paddingTop: "clamp(10px,2vw,30px)" }}>
+          <div className="bfx-deliv-grid">
+            <div>
+              <div className="bfx-kicker" data-pop>DELIVERY PROPIO + TAKE AWAY</div>
+              <h2 className="bfx-giant bfx-giant--md bfx-giant--outline" style={{ marginTop: 12, textAlign: "left" }}>
+                <span data-split="chars" style={{ display: "block" }}>DE LA COCINA</span>
+                <span data-split="chars" style={{ display: "block" }}>A TU PUERTA/MESA</span>
+              </h2>
+              <p className="bfx-copy" data-split="lines" style={{ maxWidth: 520, marginTop: 18, color: "#4a2c00" }}>
+                Salen calentitas del horno y llegan calentitas a tu casa: repartidores propios, sin apps de por medio. ¿Estás cerca? Pasá a buscarlas por {BIZ.address}.
+              </p>
+              <p className="bfx-hand" style={{ marginTop: 14, fontSize: 18, letterSpacing: ".06em", textTransform: "uppercase", color: "#4a2c00" }}>
+                📍 {BIZ.address} · {BIZ.city}
+              </p>
+            </div>
+
+            {/* mapa del local */}
+            <div className="bfx-mapcard">
+              <iframe
+                src={"https://www.google.com/maps?q=" + encodeURIComponent(BIZ.mapsQuery) + "&z=15&output=embed"}
+                title={"Mapa de Dr. Empanada · " + BIZ.address}
+                loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
+            </div>
+          </div>
 
           {/* recorrido + moto + chips de barrios.
               data-path-scene vive acá (no en la sección entera): así el scrub
@@ -299,17 +340,6 @@ function Home({ go }) {
               </span>
             ))}
           </div>
-
-          {/* mapa del local */}
-          <div className="bfx-mapcard">
-            <iframe
-              src={"https://www.google.com/maps?q=" + encodeURIComponent(BIZ.mapsQuery) + "&z=15&output=embed"}
-              title={"Mapa de Dr. Empanada · " + BIZ.address}
-              loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
-          </div>
-          <p className="bfx-hand" style={{ textAlign: "center", marginTop: 14, fontSize: 18, letterSpacing: ".06em", textTransform: "uppercase", color: "#4a2c00" }}>
-            {BIZ.address} · {BIZ.city}
-          </p>
         </div>
       </section>
 
