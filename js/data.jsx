@@ -193,6 +193,26 @@ const MENU = [
 /* Promo docena (viernes) */
 const PROMO_VIERNES = { price: 27000 };
 
+/* ---- Fotos de productos editables desde el panel ----
+   El dueño puede cambiar la foto de cualquier producto desde el admin
+   ("Fotos del menú"). Las fotos nuevas viven en Cloudflare R2 y la API
+   /api/menu-images devuelve { idProducto: url }. Si la API no responde
+   (por ejemplo en local sin Functions) quedan las fotos de assets/. */
+const IMG_OVERRIDES = {};
+const menuImg = (item) => (item && (IMG_OVERRIDES[item.id] || item.img)) || null;
+const itemImg = (item) => menuImg(item) || "assets/horno-tabla.jpg";
+function loadMenuImages() {
+  return fetch("/api/menu-images", { cache: "no-store" })
+    .then((r) => (r.ok && (r.headers.get("content-type") || "").includes("json") ? r.json() : {}))
+    .then((map) => {
+      Object.keys(IMG_OVERRIDES).forEach((k) => { delete IMG_OVERRIDES[k]; });
+      Object.assign(IMG_OVERRIDES, map || {});
+      window.dispatchEvent(new Event("bf-menu-images"));
+    })
+    .catch(() => {});
+}
+loadMenuImages();
+
 const FLAT_ITEMS = MENU.flatMap((c) => c.items.map((i) => ({ ...i, cat: c.id, catName: c.name, draft: !!c.draft })));
 const findItem = (id) => FLAT_ITEMS.find((i) => i.id === id);
 const findExtra = (id) => EXTRAS.find((e) => e.id === id);
@@ -290,7 +310,7 @@ const Ic = {
 };
 
 Object.assign(window, {
-  ENV, PROD_HOST,
+  ENV, PROD_HOST, IMG_OVERRIDES, menuImg, itemImg, loadMenuImages,
   BIZ, MENU, FLAT_ITEMS, findItem, REVIEWS, money, Empanada, Cloche, Logo, LogoBadge, Ic, IMG,
   EXTRAS, MEDALLONES, PROTEINAS, HAPPY, PROMO_VIERNES,
   SHIPPING, SENA_PCT, COUPONS, findCoupon, couponDiscount, couponLabel,

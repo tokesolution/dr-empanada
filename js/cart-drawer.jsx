@@ -21,7 +21,7 @@ function CartDrawer({ go }) {
 
   const lineKey = (l) => l.id + "|" + l.variant + "|" + (l.modsLabel || "");
   const goCheckout = () => { setOpen(false); go("#/checkout"); };
-  const thumb = (it) => it && (it.img
+  const thumb = (it) => it && (menuImg(it)
     || (it.cat === "drinks" ? "assets/promo-docena.jpg" : "assets/horno-tabla.jpg"));
 
   return (

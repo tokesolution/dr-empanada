@@ -64,3 +64,25 @@ versión vieja (`/js/*` tiene caché de 1 h, `/css/*` y `/assets/*` de 1 año �
 
 El panel de administración está en `#/admin` (usuarios de prueba en
 `js/store.jsx` → `getUsers`).
+
+## Fotos del menú (panel admin)
+
+El dueño cambia la foto de cualquier producto desde **Panel › Fotos del menú**.
+Las fotos se guardan en Cloudflare R2 a través de las Functions de `functions/`:
+
+| Ruta | Qué hace |
+|---|---|
+| `GET /api/menu-images` | Mapa `{ idProducto: url }` que el sitio lee al cargar |
+| `PUT /api/menu-images/:id` | Sube la foto nueva (pide el header `x-admin-key`) |
+| `DELETE /api/menu-images/:id` | Vuelve a la foto original de `assets/` |
+| `GET /img/menu/...` | Sirve la foto desde R2 |
+
+Configuración en Cloudflare (proyecto de Pages › Settings, en **Production y Preview**):
+
+- Binding de R2 **`MENU_IMAGES`** → un bucket (ej. `dr-empanada-fotos`).
+- Secreto **`ADMIN_KEY`** → la "clave de fotos" que se le pasa al dueño.
+
+Sin eso el sitio funciona igual con las fotos de `assets/` y el panel avisa que
+falta configurar. Para probar en local: `npx wrangler pages dev . --r2 MENU_IMAGES`
+con un `.dev.vars` que tenga `ADMIN_KEY=...` (está en `.gitignore`).
+

@@ -1,8 +1,8 @@
 /* ============================================================
-   menu.jsx — Menú completo estilo cartoon (nivel crav):
-   hero gigante, buscador pill, pills sticky, cards blancas
-   sticker, birras con medidores, listas claras. Mantiene toda
-   la funcionalidad de pedido (carrito, customizer, stock).
+   menu.jsx — La carta, pensada para pedir rápido:
+   cabecera compacta, buscador, categorías como pestañas y una
+   grilla "bento" con tarjetas a foto completa (nombre y precio
+   sobre la imagen). Mantiene carrito, customizer y stock.
    ============================================================ */
 function MenuPage({ go }) {
   const store = useStore();
@@ -11,34 +11,33 @@ function MenuPage({ go }) {
   const heroRef = React.useRef(null);
   React.useEffect(() => (window.FX ? FX.bind(heroRef.current) : undefined), []);
 
-  /* Pedido rápido: las categorías son PESTAÑAS (se ve una sola por vez) en
-     vez de una página larguísima con todo apilado. El buscador busca en toda
-     la carta y muestra los resultados agrupados. */
+  /* Las categorías son PESTAÑAS (se ve una sola por vez). El buscador busca
+     en toda la carta y muestra los resultados agrupados. */
   const q = query.trim().toLowerCase();
   const matches = (i) => !q || (i.name + " " + (i.desc || "") + " " + (i.brewery || "")).toLowerCase().includes(q);
   const results = MENU.map((c) => ({ ...c, items: c.items.filter(matches) })).filter((c) => c.items.length);
   const shown = q ? results : MENU.filter((c) => c.id === active);
+  const promo = (MENU.find((c) => c.id === "promos") || { items: [] }).items.find((i) => i.id === "docena-surtida");
+  const CAT_ICON = { empanadas: "emp", pastelitos: "pastelito", promos: "queso", drinks: "aji" };
 
   return (
     <main className="bfx">
-      {/* cabecera compacta: título a la izquierda, buscador a la derecha */}
+      {/* cabecera compacta */}
       <section ref={heroRef} className="bfx-menu-top" aria-label="La carta">
         <div className="bfx-menu-wrap bfx-menu-head">
           <div>
             <div className="bfx-kicker" data-pop>★ LA CARTA ★</div>
-            <h1 className="bfx-giant bfx-giant--md" style={{ marginTop: 8 }}>
+            <h1 className="bfx-giant" style={{ marginTop: 8 }}>
               <span data-split="chars">ELEGÍ, SUMÁ </span><span data-split="chars" className="ylw">Y LISTO.</span>
             </h1>
           </div>
           <div className="bfx-menu-search">
-            <div style={{ position: "relative", width: "100%" }}>
+            <div className="bfx-searchwrap">
+              <svg className="ico" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
               <input className="bfx-searchbox" value={query} onChange={(e) => setQuery(e.target.value)}
                 placeholder="Buscá… (humita, cuchillo, membrillo)" aria-label="Buscar en el menú" />
               {query && (
-                <button onClick={() => setQuery("")} aria-label="Limpiar búsqueda"
-                  style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", color: "var(--bfx-red)", display: "grid", cursor: "pointer" }}>
-                  <Ic.x width={19} height={19} />
-                </button>
+                <button className="clr" onClick={() => setQuery("")} aria-label="Limpiar búsqueda"><Ic.x width={18} height={18} /></button>
               )}
             </div>
             <p className="bfx-hand bfx-menu-sub">
@@ -49,19 +48,25 @@ function MenuPage({ go }) {
         </div>
       </section>
 
-      {/* pestañas sticky */}
+      {/* pestañas sticky: control segmentado con un sticker por categoría */}
       <div className="bfx-catbar">
-        <div className="bfx-menu-wrap" style={{ display: "flex", gap: 8, padding: "10px 24px", overflowX: "auto" }}>
-          {MENU.map((c) => (
-            <button key={c.id} onClick={() => { setActive(c.id); setQuery(""); }}
-              className={"bfx-catpill" + (!q && active === c.id ? " on" : "")} aria-pressed={!q && active === c.id}>
-              {c.name} <span className="n">{c.items.length}</span>
-            </button>
-          ))}
+        <div className="bfx-menu-wrap" style={{ padding: "10px 24px" }}>
+          <div className="bfx-segmented" role="tablist" aria-label="Categorías">
+            {MENU.map((c) => {
+              const on = !q && active === c.id;
+              return (
+                <button key={c.id} role="tab" aria-selected={on} onClick={() => { setActive(c.id); setQuery(""); }}
+                  className={"bfx-seg" + (on ? " on" : "")}>
+                  <span className="ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: (window.FX && FX.STICKERS[CAT_ICON[c.id]]) || "" }} />
+                  {c.name} <span className="n">{c.items.length}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
       </div>
 
-      <div className="bfx-menu-wrap" style={{ padding: "18px 24px 60px" }}>
+      <div className="bfx-menu-wrap" style={{ padding: "16px 24px 60px" }}>
         {shown.length === 0 && (
           <div style={{ padding: "50px 0", textAlign: "center" }}>
             <Sticker name="aceituna" size={80} style={{ position: "relative", margin: "0 auto 14px" }} />
@@ -71,25 +76,38 @@ function MenuPage({ go }) {
           </div>
         )}
 
-        {shown.map((cat) => (
-          <section key={cat.id} className="bfx-menu-cat" aria-label={cat.name}>
-            <div className="bfx-menu-cathead">
-              {q && <h2 className="bfx-giant" style={{ fontSize: "clamp(26px,2.6vw,36px)" }}>{cat.name}</h2>}
-              <span className="bfx-hand kick">{cat.kicker}</span>
-              {cat.note && <span className="bfx-hand note"><Ic.leaf style={{ color: "var(--bfx-green)", flexShrink: 0 }} /> {cat.note}</span>}
-            </div>
-
-            {cat.layout === "cards" && (
-              <div className="bfx-menu-grid">
-                {cat.items.map((item, i) => <MenuCard key={item.id} item={item} />)}
+        {shown.map((cat) => {
+          // bento solo para empanadas sin búsqueda: la más pedida grande + tile de promo
+          const bento = !q && cat.id === "empanadas";
+          return (
+            <section key={cat.id + (q ? "-q" : "")} className="bfx-menu-cat bfx-fadein" aria-label={cat.name}>
+              <div className="bfx-menu-cathead">
+                {q && <h2 className="bfx-giant" style={{ fontSize: "clamp(26px,2.6vw,36px)" }}>{cat.name}</h2>}
+                <span className="bfx-hand kick">{cat.kicker}</span>
+                {cat.note && <span className="bfx-hand note"><Ic.leaf style={{ color: "var(--bfx-green)", flexShrink: 0 }} /> {cat.note}</span>}
               </div>
-            )}
-            {cat.layout === "taps" && <BeerGrid items={cat.items} />}
-            {cat.layout === "list" && <LightList items={cat.items} />}
 
-            {cat.id === "promos" && !q && <HappyBanner go={go} />}
-          </section>
-        ))}
+              {cat.layout === "cards" && (
+                <div className={"bfx-pgrid" + (bento ? " bfx-pgrid--bento" : "")}>
+                  {cat.items.map((item, i) => <ProductTile key={item.id} item={item} featured={bento && i === 0} index={i} />)}
+                  {bento && promo && (
+                    <button type="button" className="bfx-promotile" onClick={() => setActive("promos")}>
+                      <Sticker name="emp" size={84} style={{ position: "absolute", right: 14, top: 12, "--rot": "10deg" }} />
+                      <span className="k">Para la juntada</span>
+                      <span className="t">{promo.name}</span>
+                      <span className="p">{money(promo.price)}</span>
+                      <span className="go">Ver promos →</span>
+                    </button>
+                  )}
+                </div>
+              )}
+              {cat.layout === "taps" && <BeerGrid items={cat.items} />}
+              {cat.layout === "list" && <LightList items={cat.items} />}
+
+              {cat.id === "promos" && !q && <HappyBanner go={go} />}
+            </section>
+          );
+        })}
       </div>
 
       <MobileCartBar go={go} />
@@ -97,8 +115,10 @@ function MenuPage({ go }) {
   );
 }
 
-/* ---------- Card de producto (clara, estilo sticker) ---------- */
-function MenuCard({ item }) {
+/* ---------- Tarjeta de producto: foto completa + info encima ----------
+   La foto ocupa toda la tarjeta y un degradé oscuro abajo deja leer el
+   nombre y el precio sobre la imagen (como las apps de delivery). */
+function ProductTile({ item, featured = false, index = 0 }) {
   const store = useStore();
   const stock = store.getStock()[item.id] ?? 99;
   const out = stock <= 0;
@@ -109,39 +129,35 @@ function MenuCard({ item }) {
     toast(item.name + " agregada al pedido");
   };
   const customize = () => { if (!out) window.dispatchEvent(new CustomEvent("bf-customize", { detail: item.id })); };
-  const TAG_CLS = { TOP: "bfx-minitag", TIRADA: "bfx-minitag--ylw", "PROMO VIERNES": "bfx-minitag--green" };
+  const TAG_TXT = { TOP: "★ Top" };
   return (
-    <div className="bfx-menucard" style={{ opacity: out ? .55 : 1 }}>
-      <div className="photo">
-        <img src={(item.img) || "assets/horno-tabla.jpg"} alt={item.name} loading="lazy" />
-        <div style={{ position: "absolute", top: 10, left: 10, display: "flex", gap: 6 }}>
-          {item.tags.map((t) => (
-            <span key={t} className={"bfx-minitag " + (TAG_CLS[t] || "")}>{t === "TOP" ? "★ TOP" : t}</span>
-          ))}
-        </div>
-        {out && (
-          <div style={{ position: "absolute", inset: 0, background: "rgba(43,20,3,.55)", display: "grid", placeItems: "center" }}>
-            <span className="bfx-minitag" style={{ transform: "rotate(-4deg)", fontSize: 16 }}>SIN STOCK</span>
-          </div>
-        )}
+    <article className={"bfx-ptile" + (featured ? " is-featured" : "") + (out ? " is-out" : "")}
+      style={{ "--i": index }}>
+      <img src={itemImg(item)} alt={item.name} loading={index < 8 ? "eager" : "lazy"} />
+      <div className="shade" aria-hidden="true" />
+      <div className="tags">
+        {featured && <span className="tag tag--hot">La más pedida</span>}
+        {item.tags.filter((t) => !(featured && t === "TOP")).map((t) => <span key={t} className="tag">{TAG_TXT[t] || t}</span>)}
       </div>
-      {/* compacta: nombre, descripción en 2 líneas y abajo precio + sumar */}
-      <div className="name">{item.name}</div>
-      <div className="desc" title={item.desc}>{item.desc}</div>
-      <div className="foot">
-        <span className="price">{money(item.price)}</span>
-        <div style={{ display: "flex", gap: 6 }}>
-          {item.custom && (
-            <button className="bfx-addbtn ghost" disabled={out} onClick={customize} aria-label={"Personalizar " + item.name}>
-              <Ic.sliders width={15} height={15} />
+      {out && <div className="soldout"><span>Sin stock</span></div>}
+      <div className="info">
+        <h3 className="nm">{item.name}</h3>
+        <p className="ds">{item.desc}</p>
+        <div className="row">
+          <span className="pr">{money(item.price)}</span>
+          <div className="acts">
+            {item.custom && (
+              <button className="ibtn ghost" disabled={out} onClick={customize} aria-label={"Personalizar " + item.name}>
+                <Ic.sliders width={15} height={15} />
+              </button>
+            )}
+            <button className="ibtn" disabled={out} onClick={item.custom ? customize : quickAdd} aria-label={"Sumar " + item.name}>
+              <Ic.plus width={18} height={18} />
             </button>
-          )}
-          <button className="bfx-addbtn" disabled={out} onClick={item.custom ? customize : quickAdd} aria-label={"Sumar " + item.name}>
-            <Ic.plus width={17} height={17} />
-          </button>
+          </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -190,28 +206,19 @@ function LightList({ items }) {
     window.dispatchEvent(new CustomEvent("bf-cart-bump"));
     toast(it.name + " agregado al pedido");
   };
+  // bebidas (sin foto): tiles de vidrio en grilla, mismo lenguaje que las tarjetas
   return (
-    <div style={{ maxWidth: 740, marginTop: 8 }}>
+    <div className="bfx-drinkgrid">
       {items.map((it, i) => (
-        <Reveal key={it.id} delay={i * 40}>
-          <div className="bfx-lrow">
-            <div style={{ minWidth: 0 }}>
-              <div style={{ fontSize: 21 }}>{it.name}</div>
-              {it.desc && <div style={{ fontSize: 16, opacity: .6 }}>{it.desc}</div>}
-              {it.hh && (
-                /* la lista vive sobre el fondo oscuro: la tinta apagada va clara */
-                <div style={{ fontSize: 15, color: happy ? "var(--bfx-green)" : "rgba(246,232,210,.55)" }}>
-                  Promo mediodía · 2 × {money(it.hh)}
-                </div>
-              )}
-            </div>
-            <span className="dots" />
-            <span style={{ fontSize: 21 }}>{money(it.price)}</span>
-            <button className="bfx-addbtn" style={{ width: 38, height: 38 }} aria-label={"Sumar " + it.name} onClick={() => add(it)}>
-              <Ic.plus width={16} height={16} />
-            </button>
+        <div key={it.id} className="bfx-drink" style={{ "--i": i }}>
+          <div style={{ minWidth: 0 }}>
+            <div className="nm">{it.name}</div>
+            {it.desc && <div className="ds">{it.desc}</div>}
+            {it.hh && <div className="hh" style={{ color: happy ? "var(--bfx-green)" : undefined }}>Promo mediodía · 2 × {money(it.hh)}</div>}
           </div>
-        </Reveal>
+          <span className="pr">{money(it.price)}</span>
+          <button className="ibtn" aria-label={"Sumar " + it.name} onClick={() => add(it)}><Ic.plus width={17} height={17} /></button>
+        </div>
       ))}
     </div>
   );

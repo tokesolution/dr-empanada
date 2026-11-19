@@ -20,6 +20,12 @@ const go = (hash) => { window.location.hash = hash; };
 function App() {
   const route = useRoute();
   const [t, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  // cuando llegan (o cambian desde el panel) las fotos del menú, re-render
+  const [, bumpImgs] = React.useReducer((x) => x + 1, 0);
+  React.useEffect(() => {
+    window.addEventListener("bf-menu-images", bumpImgs);
+    return () => window.removeEventListener("bf-menu-images", bumpImgs);
+  }, []);
   const target = route.split("?")[0];
 
   // path que realmente se renderiza — cambia recién cuando el wipe tapa la

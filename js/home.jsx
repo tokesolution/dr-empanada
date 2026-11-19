@@ -106,7 +106,7 @@ function SaborSlider({ index, onIndex }) {
         <div data-float=".08" style={{ position: "relative" }}>
           <div className="bfx-blobphoto" style={{ aspectRatio: "1.2", border: "9px solid #fff" }}>
             {items.map((it, k) => (
-              <img key={it.id} src={it.img} alt={"Empanada de " + it.name}
+              <img key={it.id} src={itemImg(it)} alt={"Empanada de " + it.name}
                 className={"bfx-slide" + (k === index ? " on" : "")}
                 loading={k === 0 ? "eager" : "lazy"} />
             ))}
@@ -139,9 +139,9 @@ function Home({ go }) {
   const marqueeMsgs = Array(6).fill("Promociones todas las semanas");
 
   const polaroids = [
-    { img: "assets/empanadas/carne-cuchillo.jpg", name: "Carne Cuchillo", price: money(2700), rot: -5 },
-    { img: "assets/empanadas/cheeseburger.jpg", name: "Cheeseburger", price: money(2700), rot: 3 },
-    { img: "assets/empanadas/matambre-pizza.jpg", name: "Matambre a la Pizza", price: money(2700), rot: 6 },
+    { img: IMG_OVERRIDES["carne-cuchillo"] || "assets/empanadas/carne-cuchillo.jpg", name: "Carne Cuchillo", price: money(2700), rot: -5 },
+    { img: IMG_OVERRIDES["cheese"] || "assets/empanadas/cheeseburger.jpg", name: "Cheeseburger", price: money(2700), rot: 3 },
+    { img: IMG_OVERRIDES["matambre-pizza"] || "assets/empanadas/matambre-pizza.jpg", name: "Matambre a la Pizza", price: money(2700), rot: 6 },
   ];
 
   /* Barrios: van como chips SOBRE el recorrido punteado.
@@ -361,7 +361,7 @@ function Home({ go }) {
             {masVendidas.map((b, i) => (
               <div key={b.id} className="bfx-beercard" data-pop data-pop-delay={i * 0.07} data-inertia style={{ "--rot": ((i % 3) - 1) * 2 + "deg" }}>
                 <div className="thumb">
-                  <img src={b.img} alt={"Empanada de " + b.name} loading="lazy" />
+                  <img src={itemImg(b)} alt={"Empanada de " + b.name} loading="lazy" />
                   <span className="rank">#{i + 1}</span>
                 </div>
                 <div>

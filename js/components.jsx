@@ -63,7 +63,7 @@ const KIND_IMG = {
 const CAT_ICON = { drinks: Ic.glass };
 function Photo({ item, src, kind, alt = "", className = "", style }) {
   const [ld, setLd] = useState(false);
-  const url = src || (item && item.img) || (kind && KIND_IMG[kind]) || null;
+  const url = src || menuImg(item) || (kind && KIND_IMG[kind]) || null;
   if (!url) {
     const Icon = (item && CAT_ICON[item.cat]) || Ic.glass;
     return (
@@ -410,7 +410,7 @@ function Customizer() {
       <div className="bfx-modal" role="dialog" aria-modal="true" aria-label={"Personalizar " + item.name}>
         {/* header foto */}
         <div className="bfx-modal-head">
-          <img src={item.img || "assets/horno-tabla.jpg"} alt={item.name} />
+          <img src={itemImg(item)} alt={item.name} />
           <div className="veil" />
           <button className="bfx-modal-close" onClick={() => setItem(null)} aria-label="Cerrar"><Ic.x /></button>
           <div className="ttl">

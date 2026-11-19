@@ -26,3 +26,6 @@ squirrel.toml
 
 # Artefactos de verificación con browser
 .playwright-mcp/
+
+# Secretos locales de wrangler pages dev (no se suben)
+.dev.vars

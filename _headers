@@ -7,7 +7,7 @@
   Strict-Transport-Security: max-age=31536000; includeSubDomains
   Permissions-Policy: geolocation=(), microphone=(), camera=()
   # CSP en Report-Only: no bloquea, solo reporta. Pasar a "Content-Security-Policy" (enforce) tras validar.
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://unpkg.com https://cdn.jsdelivr.net; frame-src https://www.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://unpkg.com https://cdn.jsdelivr.net; frame-src https://www.google.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
 
 # Assets estáticos versionados: caché largo
 /css/*

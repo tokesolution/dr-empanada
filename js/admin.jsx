@@ -50,6 +50,9 @@ function AdminLogin({ go }) {
   );
 }
 
+/* ícono de foto para la pestaña "Fotos del menú" */
+const IcPhoto = (p) => (<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="4" width="18" height="16" rx="3" /><circle cx="9" cy="10" r="2" /><path d="M21 16l-5-5-9 9" /></svg>);
+
 /* ---------------- SHELL ---------------- */
 function AdminShell({ go, auth }) {
   const store = useStore();
@@ -98,6 +101,7 @@ function AdminShell({ go, auth }) {
     ...(isOwner
       ? [["Gestión", [
           ["stock", "Stock", Ic.box, null],
+          ["fotos", "Fotos del menú", IcPhoto, null],
           ["reportes", "Reportes", Ic.chart, null],
           ["ajustes", "Ajustes", Ic.sliders, null],
         ]]]
@@ -168,6 +172,7 @@ function AdminShell({ go, auth }) {
         {tab === "ordenes" && <OrdersBoard onDetail={setDetail} onPay={setPayOrder} />}
         {tab === "caja" && <Caja onPay={setPayOrder} />}
         {tab === "stock" && <StockManager />}
+        {tab === "fotos" && isOwner && <AdminPhotos />}
         {tab === "reportes" && isOwner && <Reports />}
         {tab === "ajustes" && isOwner && <AdminSettings auth={auth} />}
       </main>

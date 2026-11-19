@@ -4,126 +4,192 @@
    ============================================================ */
 
 /* ===================== NOSOTROS =====================
-   Mismo lenguaje que el home: hero en una pantalla con títere + palabra
-   gigante, la historia en una fila de polaroids (antes 5 bloques apilados
-   que obligaban a scrollear mucho) y el cierre "desde 1989" en dos columnas.
-   La información es la misma de antes. */
+   Misma estética que el home pero con recursos propios:
+   1) hero con la "receta del Dr." (una receta médica de verdad: Rp/,
+      letra manuscrita, firma y sello) + contadores que suben solos;
+   2) "una historia en cada capa" como recorrido HORIZONTAL que avanza
+      con el scroll (se fija la sección y las capas pasan de costado);
+   3) cierre con una cinta de fotos en movimiento.
+   La información es la misma de siempre. */
+function CountUp({ to, prefix = "", suffix = "", decimals = 0, dur = 1400 }) {
+  const ref = React.useRef(null);
+  const [v, setV] = React.useState(0);
+  React.useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.FX && FX.rm) { setV(to); return; }
+    let raf = 0, started = false;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting || started) return;
+      started = true;
+      const t0 = performance.now();
+      const tick = (now) => {
+        const p = Math.min(1, (now - t0) / dur);
+        setV(to * (1 - Math.pow(1 - p, 3)));
+        if (p < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, { threshold: .4 });
+    io.observe(el);
+    return () => { io.disconnect(); cancelAnimationFrame(raf); };
+  }, [to]);
+  return <span ref={ref}>{prefix}{v.toFixed(decimals).replace(".", ",")}{suffix}</span>;
+}
+
 function Nosotros({ go }) {
   const ref = React.useRef(null);
+  const secRef = React.useRef(null);
+  const trackRef = React.useRef(null);
+  const barRef = React.useRef(null);
   React.useEffect(() => (window.FX ? FX.bind(ref.current) : undefined), []);
 
+  /* recorrido horizontal: la sección se fija y la tira de capas se desplaza
+     de costado con el scroll (sólo desktop; en celu se desliza con el dedo) */
+  React.useEffect(() => {
+    if (!window.gsap || !window.ScrollTrigger || (window.FX && FX.rm)) return;
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 900px)", () => {
+      const sec = secRef.current, track = trackRef.current;
+      const dist = () => Math.max(0, track.scrollWidth - track.parentElement.clientWidth);
+      const tw = gsap.to(track, {
+        x: () => -dist(), ease: "none",
+        scrollTrigger: {
+          trigger: sec, start: "top 72px", end: () => "+=" + dist(),
+          // pinType transform: la página vive dentro de .bfx-route-in (que
+          // anima con transform) y ahí un position:fixed se descoloca
+          pin: true, pinType: "transform", scrub: .6, invalidateOnRefresh: true, anticipatePin: 1,
+          onUpdate: (st) => { if (barRef.current) barRef.current.style.transform = "scaleX(" + st.progress + ")"; },
+        },
+      });
+      ScrollTrigger.refresh();
+      return () => { tw.scrollTrigger && tw.scrollTrigger.kill(); tw.kill(); };
+    });
+    return () => mm.revert();
+  }, []);
+
   const story = [
-    { tag: "MASA CASERA", cls: "bfx-badge--green", img: "assets/horno-tabla.jpg", rot: -3, txt: "Masa propia estirada en el día: finita, elástica y con el punto justo de horno." },
-    { tag: "RELLENO GENEROSO", cls: "bfx-badge--red", img: "assets/carne-corte.jpg", rot: 2, txt: "Carne cortada a cuchillo, cebolla dorada lenta y rellenos que se cocinan a fuego lento." },
-    { tag: "QUESO QUE SE ESTIRA", cls: "", img: "assets/empanadas/provolone.jpg", rot: -2, txt: "Muzzarella, provolone y cheddar de verdad, que se funden y se estiran en cada bocado." },
-    { tag: "REPULGUE A MANO", cls: "bfx-badge--red", img: "assets/repulgue.jpg", rot: 3, txt: "Cada empanada cerrada a mano, con el repulgue de siempre. Así se distingue cada sabor." },
-    { tag: "PASTELITOS CROCANTES", cls: "bfx-badge--green", img: "assets/pastelitos-membrillo.jpg", rot: -2, txt: "Hojaldre frito y crocante con membrillo, batata o dulce de leche. El final obligado." },
+    { n: "01", tag: "MASA CASERA", cls: "bfx-badge--green", img: "assets/horno-tabla.jpg", txt: "Masa propia estirada en el día: finita, elástica y con el punto justo de horno." },
+    { n: "02", tag: "RELLENO GENEROSO", cls: "bfx-badge--red", img: "assets/carne-corte.jpg", txt: "Carne cortada a cuchillo, cebolla dorada lenta y rellenos que se cocinan a fuego lento." },
+    { n: "03", tag: "QUESO QUE SE ESTIRA", cls: "", img: "assets/empanadas/provolone.jpg", txt: "Muzzarella, provolone y cheddar de verdad, que se funden y se estiran en cada bocado." },
+    { n: "04", tag: "REPULGUE A MANO", cls: "bfx-badge--red", img: "assets/repulgue.jpg", txt: "Cada empanada cerrada a mano, con el repulgue de siempre. Así se distingue cada sabor." },
+    { n: "05", tag: "PASTELITOS CROCANTES", cls: "bfx-badge--green", img: "assets/pastelitos-membrillo.jpg", txt: "Hojaldre frito y crocante con membrillo, batata o dulce de leche. El final obligado." },
   ];
-  const stats = [["+35", "años de historia"], [BIZ.rating + "★", "en Google"], ["13", "sabores"], ["100%", "casero"]];
+  const years = new Date().getFullYear() - BIZ.since;
+  const reel = ["assets/horno-fila.jpg", "assets/empanadas/carne-cuchillo.jpg", "assets/pastelitos-enteros.jpg", "assets/humita-corte.jpg",
+    "assets/promo-bandeja.jpg", "assets/vacio-mano.jpg", "assets/caprese-mano.jpg", "assets/media-docena.jpg"];
 
   return (
-    <main ref={ref} className="bfx">
-      {/* ===== HERO ===== */}
-      <section className="bfx-hero bfx-about-hero" aria-label="Nuestra historia">
-        <div className="bfx-hero-grid">
-          <div className="bfx-hero-text">
+    <main ref={ref} className="bfx bfx-about">
+      {/* ===== HERO: la receta del Dr. ===== */}
+      <section className="bfx-ab-hero" aria-label="Nuestra historia">
+        <div className="bfx-ab-hero-grid">
+          <div>
             <div className="bfx-kicker" data-pop>★ NUESTRA HISTORIA ★</div>
-            <h1 className="bfx-giant bfx-hero-h1" aria-label="Qué hay adentro">
-              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>QUÉ HAY</span>
-              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}><span className="ylw">ADENTRO.</span></span>
+            <h1 className="bfx-giant bfx-ab-h1" aria-label="Una receta de 1989">
+              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>UNA RECETA</span>
+              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>DE <span className="ylw">1989.</span></span>
             </h1>
-            <p className="bfx-copy bfx-hero-lead" data-split="lines">
+            <p className="bfx-copy" data-split="lines" style={{ maxWidth: 500, margin: "18px 0 0" }}>
               No tenemos una lista larga de ingredientes: tenemos una corta, y somos obsesivos con cada cosa que entra.
               Desde 1989 haciendo la empanada que nos gustaría comer.
             </p>
-            <div className="bfx-about-stats">
-              {stats.map(([n, l], i) => (
-                <div key={l} className="bfx-panel" data-pop data-pop-delay={0.5 + i * 0.08}
-                  style={{ rotate: ((i % 2 ? 1 : -1) * 2) + "deg" }}>
-                  <div className="bfx-bubble" style={{ fontSize: 28 }}>{n}</div>
-                  <div className="bfx-hand lbl">{l}</div>
+          </div>
+
+          {/* la receta médica */}
+          <div className="bfx-rx-wrap" data-pop data-pop-delay=".3">
+            <div className="bfx-rx">
+              <div className="bfx-rx-head">
+                <span className="bfx-logobadge" style={{ fontSize: 6 }}><img src="assets/logo.webp" alt="" width="512" height="512" /></span>
+                <div>
+                  <div className="dr">Dr. Empanada</div>
+                  <div className="sp">El especialista en sabor · Mat. 1989</div>
                 </div>
+              </div>
+              <div className="bfx-rx-body">
+                <div className="rp">Rp/</div>
+                <ol className="hand">
+                  <li>Masa casera, estirada en el día.</li>
+                  <li>Relleno generoso, a fuego lento.</li>
+                  <li>Repulgue a mano, uno por uno.</li>
+                  <li>Al horno o frita, a gusto.</li>
+                </ol>
+                <div className="hand dose">Tomar una docena cada vez que haya hambre.</div>
+              </div>
+              <div className="bfx-rx-foot">
+                <span>{BIZ.address} · {BIZ.city}</span>
+                <svg className="sign" viewBox="0 0 160 50" aria-hidden="true"><path d="M6 36 C 22 6, 30 46, 44 24 S 66 8, 72 30 S 92 44, 104 18 S 132 10, 154 30" fill="none" stroke="#1d3f8f" strokeWidth="3" strokeLinecap="round" /></svg>
+              </div>
+              <div className="bfx-rx-stamp" aria-hidden="true">
+                <span>VILLA DEVOTO</span><b>APROBADO</b><span>· DESDE 1989 ·</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* contadores */}
+        <div className="bfx-ab-stats">
+          <div><b><CountUp to={years} prefix="+" /></b><span>años de historia</span></div>
+          <div><b><CountUp to={BIZ.rating} decimals={1} suffix="★" /></b><span>en Google · {BIZ.reviewsCount} reseñas</span></div>
+          <div><b><CountUp to={13} /></b><span>sabores de empanada</span></div>
+          <div><b><CountUp to={100} suffix="%" /></b><span>casero, todos los días</span></div>
+        </div>
+      </section>
+
+      {/* ===== UNA HISTORIA EN CADA CAPA: recorrido horizontal ===== */}
+      <section ref={secRef} className="bfx-mustardsec bfx-ab-layers" aria-label="Una historia en cada capa">
+        <div className="bfx-ab-layers-in">
+          <div className="bfx-ab-track-viewport">
+            <div ref={trackRef} className="bfx-ab-track">
+              <div className="bfx-ab-intro">
+                <h2 className="bfx-giant bfx-giant--md bfx-giant--outline">
+                  <span style={{ display: "block" }}>UNA HISTORIA</span>
+                  <span style={{ display: "block" }}>EN CADA CAPA.</span>
+                </h2>
+                <p className="bfx-copy" style={{ color: "#4a2c00", margin: "16px 0 0" }}>
+                  No elegimos ingredientes de una lista: pensamos de dónde vienen, por qué importan y qué le suman a cada empanada.
+                </p>
+                <div className="bfx-hand hint"><span className="d">Seguí bajando →</span><span className="m">Deslizá →</span></div>
+              </div>
+              {story.map((s, i) => (
+                <article key={s.tag} className="bfx-ab-panel" style={{ "--r": (i % 2 ? 1.5 : -1.5) + "deg" }}>
+                  <div className="pic">
+                    <img src={s.img} alt={s.tag} loading="eager" decoding="async" />
+                    <span className="num">{s.n}</span>
+                  </div>
+                  <span className={"bfx-badge " + s.cls} style={{ "--rot": (i % 2 ? 4 : -4) + "deg" }}>{s.tag}</span>
+                  <p>{s.txt}</p>
+                </article>
               ))}
             </div>
           </div>
-
-          <div className="bfx-hero-puppet">
-            <div className="bfx-hero-burger" data-pop data-pop-delay=".35" data-inertia>
-              <div className="bfx-blobphoto" data-idle style={{ width: "100%", height: "100%" }}>
-                <img src="assets/repulgue.jpg" alt="Repulgue hecho a mano en Dr. Empanada" />
-              </div>
-              <GooglyEyes style={{ left: "22%", top: "8%", width: "56%" }} />
-            </div>
-            <span className="bfx-badge" data-pop data-pop-delay=".9" data-idle
-              style={{ "--rot": "8deg", position: "absolute", right: "-2%", top: "6%", zIndex: 3 }}>DESDE 1989</span>
-            <span className="bfx-badge bfx-badge--red" data-pop data-pop-delay="1.05" data-idle
-              style={{ "--rot": "-7deg", position: "absolute", left: "-4%", bottom: "14%", zIndex: 3 }}>MELINCUÉ 4399</span>
-          </div>
+          <div className="bfx-ab-progress" aria-hidden="true"><span ref={barRef} /></div>
         </div>
-        <div className="bfx-hero-word bfx-bubble" aria-hidden="true" data-pop data-pop-delay=".4">CASERAS</div>
       </section>
 
-      {/* ===== UNA HISTORIA EN CADA CAPA (naranja) ===== */}
-      <section className="bfx-mustardsec" style={{ padding: "0 0 clamp(40px,5vw,70px)", overflow: "clip" }} aria-label="Una historia en cada capa">
-        <Wave fill="#f2900d" style={{ background: "var(--bfx-cream)" }} />
-        <div className="bfx-about-wrap" style={{ position: "relative" }}>
-          <div className="bfx-about-layershead">
-            <h2 className="bfx-giant bfx-giant--md bfx-giant--outline" style={{ textAlign: "left" }}>
-              <span data-split="chars" style={{ display: "block" }}>UNA HISTORIA</span>
-              <span data-split="chars" style={{ display: "block" }}>EN CADA CAPA.</span>
-            </h2>
-            <p className="bfx-copy" data-split="lines" style={{ maxWidth: 440, color: "#4a2c00", margin: 0 }}>
-              No elegimos ingredientes de una lista: pensamos de dónde vienen, por qué importan y qué le suman a cada empanada.
-            </p>
-          </div>
-
-          <div className="bfx-about-layers">
-            {story.map((s, i) => (
-              <figure key={s.tag} className="bfx-polaroid bfx-layercard" data-pop data-pop-delay={i * 0.08} data-inertia
-                style={{ "--rot": s.rot + "deg" }}>
-                <div style={{ position: "relative" }}>
-                  <img src={s.img} alt={s.tag} loading="lazy" />
-                  <span className={"bfx-badge " + s.cls} style={{ "--rot": (s.rot > 0 ? -5 : 5) + "deg", position: "absolute", left: 8, bottom: -14, fontSize: 14 }}>
-                    {s.tag}
-                  </span>
-                </div>
-                <figcaption>{s.txt}</figcaption>
-              </figure>
+      {/* ===== CIERRE: desde 1989, con hambre + cinta de fotos ===== */}
+      <section className="bfx-ab-close" aria-label="De Villa Devoto">
+        <div className="bfx-ab-reel" aria-hidden="true">
+          <div className="row">
+            {[...reel, ...reel].map((src, i) => (
+              <figure key={i} style={{ "--r": ((i % 3) - 1) * 3 + "deg" }}><img src={src} alt="" loading="eager" decoding="async" /></figure>
             ))}
           </div>
         </div>
-      </section>
-
-      {/* ===== DESDE 1989 ===== */}
-      <section style={{ padding: "0 0 clamp(40px,5vw,70px)", overflow: "clip" }} aria-label="De Villa Devoto">
-        <Wave fill="#1a1611" style={{ background: "#f2900d", marginBottom: "clamp(24px,3vw,44px)" }} />
-        <div className="bfx-about-wrap bfx-about-close">
-          <div>
-            <span className="bfx-badge bfx-badge--red" data-pop data-idle style={{ "--rot": "-6deg" }}>MELINCUÉ 4399 · VILLA DEVOTO</span>
-            <h2 className="bfx-giant bfx-giant--md" style={{ marginTop: 16 }}>
-              <span data-split="chars" style={{ display: "block" }}>DESDE 1989,</span>
-              <span data-split="chars" style={{ display: "block" }}><span className="ylw">CON HAMBRE.</span></span>
-            </h2>
-            <p className="bfx-copy" data-split="lines" style={{ maxWidth: 540, margin: "18px 0 0" }}>
-              Arrancamos con un horno, una masa casera y cero vueltas. Hoy servimos en el salón, llevamos con delivery propio
-              y horneamos todos los días menos los lunes. Docenas surtidas para juntadas, docena en promo los viernes y
-              promo mediodía de martes a sábado.
-            </p>
-            <div style={{ display: "flex", gap: 14, marginTop: 24, flexWrap: "wrap", alignItems: "center" }}>
-              <a href="#/menu" className="bfx-blob" style={{ fontSize: 20 }} data-squash>Ver el menú →</a>
-              <a href={"https://instagram.com/" + BIZ.ig} target="_blank" rel="noopener" className="bfx-pill-ylw" style={{ fontSize: 18 }}>
-                <Ic.ig width={18} height={18} /> Seguinos
-              </a>
-            </div>
-          </div>
-          <div className="bfx-about-photos" aria-hidden="true">
-            <figure className="bfx-polaroid" data-pop data-inertia style={{ "--rot": "-5deg" }}>
-              <img src="assets/horno-fila.jpg" alt="" loading="lazy" />
-            </figure>
-            <figure className="bfx-polaroid" data-pop data-pop-delay=".12" data-inertia style={{ "--rot": "6deg" }}>
-              <img src="assets/promo-bandeja.jpg" alt="" loading="lazy" />
-            </figure>
-            <Sticker name="emp" size={96} data-pop data-idle style={{ position: "absolute", right: "-2%", bottom: "-6%", "--rot": "12deg", zIndex: 3 }} />
+        <div className="bfx-about-wrap bfx-ab-close-in">
+          <span className="bfx-badge bfx-badge--red" data-pop data-idle style={{ "--rot": "-6deg" }}>MELINCUÉ 4399 · VILLA DEVOTO</span>
+          <h2 className="bfx-giant bfx-giant--md" style={{ marginTop: 14 }}>
+            <span data-split="chars">DESDE 1989, </span><span data-split="chars" className="ylw">CON HAMBRE.</span>
+          </h2>
+          <p className="bfx-copy" data-split="lines" style={{ maxWidth: 700, margin: "16px auto 0" }}>
+            Arrancamos con un horno, una masa casera y cero vueltas. Hoy servimos en el salón, llevamos con delivery propio
+            y horneamos todos los días menos los lunes. Docenas surtidas para juntadas, docena en promo los viernes y
+            promo mediodía de martes a sábado.
+          </p>
+          <div style={{ display: "flex", gap: 14, marginTop: 22, flexWrap: "wrap", alignItems: "center", justifyContent: "center" }}>
+            <a href="#/menu" className="bfx-blob" style={{ fontSize: 20 }} data-squash>Ver el menú →</a>
+            <a href={"https://instagram.com/" + BIZ.ig} target="_blank" rel="noopener" className="bfx-pill-ylw" style={{ fontSize: 18 }}>
+              <Ic.ig width={18} height={18} /> Seguinos
+            </a>
           </div>
         </div>
       </section>
