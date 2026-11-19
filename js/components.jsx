@@ -188,7 +188,8 @@ function Header({ route, go }) {
 function Footer({ go }) {
   const ref = useRef(null);
   useEffect(() => (window.FX ? FX.bind(ref.current) : undefined), []);
-  const ings = ["lettuce", "tomato", "cheese", "patty", "fries", "beer", "pickle", "bacon"];
+  // rellenos reales de la carta (stickers v2 de fx.js)
+  const ings = ["emp", "morron", "aceituna", "huevo", "cebolla", "queso", "aji", "pastelito"];
   return (
     <footer ref={ref} className="bfx-footer">
       {/* el corte con la página va con wave, como el resto del sitio (antes
@@ -198,15 +199,17 @@ function Footer({ go }) {
       {/* fuente de ingredientes saltando desde abajo (queda por detrás del contenido) */}
       <div className="bfx-fountain" data-fountain aria-hidden="true">
         {ings.map((k, i) => (
-          <div key={k} className="bfx-ing" style={{ width: 78, height: 78, left: (5 + i * 11.5) + "%" }}
+          <div key={k} className="bfx-ing" style={{ width: 62, height: 62, left: (5 + i * 11.5) + "%" }}
             dangerouslySetInnerHTML={{ __html: (window.FX && FX.STICKERS[k]) || "" }} />
         ))}
       </div>
 
+      {/* compacto: logo + datos en UNA fila (antes: logo arriba, datos
+          abajo, un segundo wave y mucho aire para tan poca información) */}
       <div className="bfx-footer-main wrap">
-        <a href="#/" aria-label="Inicio" className="bfx-footer-logo" style={{ display: "inline-flex", alignItems: "center", gap: 20 }}>
-          <LogoBadge fontSize={13} rot={-3} />
-          <span className="bfx-hand" style={{ fontSize: 19, letterSpacing: ".2em", textTransform: "uppercase", opacity: .6 }}>El especialista en sabor</span>
+        <a href="#/" aria-label="Inicio" className="bfx-footer-logo">
+          <LogoBadge fontSize={9.5} rot={-3} />
+          <span className="bfx-hand">El especialista<br />en sabor</span>
         </a>
 
         <div className="bfx-footer-info">
@@ -224,20 +227,15 @@ function Footer({ go }) {
             <span className="lbl">Pedidos</span>
             <a href={"https://wa.me/" + BIZ.phoneE164} target="_blank" rel="noopener">WhatsApp {BIZ.phoneDisplay}</a><br />
             <a href={"https://instagram.com/" + BIZ.ig} target="_blank" rel="noopener">Instagram @{BIZ.ig}</a>
-          </div>
-          <div>
-            <span className="lbl">Estado</span>
-            <OpenBadge />
+            <div style={{ marginTop: 8 }}><OpenBadge /></div>
           </div>
         </div>
       </div>
 
-      <Wave fill="#17130e" style={{ background: "#241c12", position: "relative", zIndex: 4, marginTop: "clamp(50px,7vw,110px)" }} />
       <div className="bfx-footer-legal">
-        <p>Desde 1989 · Elaboración propia, masa casera y repulgue a mano.</p>
         <p>
-          © {new Date().getFullYear()} Dr. Empanada · Villa Devoto, CABA · El especialista en sabor ·{" "}
-          <a href="#/privacidad">Privacidad</a> · <a href="#/admin">Panel ›</a> · Hecho con hambre 🥟
+          © {new Date().getFullYear()} Dr. Empanada · Desde 1989 · Masa casera y repulgue a mano ·{" "}
+          <a href="#/privacidad">Privacidad</a> · <a href="#/admin">Panel ›</a>
         </p>
       </div>
     </footer>

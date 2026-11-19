@@ -502,14 +502,17 @@ body.bfx-home .grain{ opacity:.35; }
 }
 .bfx-footer-main{
   position:relative; z-index:3;
-  padding-top: clamp(10px, 2vw, 30px);
-  display:grid; grid-template-columns: 1fr; gap: clamp(28px,4vw,48px);
-  align-items:start;
+  padding: clamp(4px, 1vw, 14px) 24px clamp(22px, 3vw, 34px);
+  display:grid; grid-template-columns: auto minmax(0,1fr); gap: clamp(22px,4vw,56px);
+  align-items:center;
 }
-.bfx-footer-logo{ display:inline-block; }
+.bfx-footer-logo{ display:inline-flex; align-items:center; gap: 14px; }
+.bfx-footer-logo .bfx-hand{
+  font-size: 15px; line-height: 1.15; letter-spacing:.18em; text-transform:uppercase; opacity:.6;
+}
 .bfx-footer-info{
-  display:grid; grid-template-columns: repeat(4, 1fr); gap: 26px;
-  font-family: var(--bfx-mouse); font-size: clamp(16px,1.5vw,20px); letter-spacing:.02em; line-height:1.4;
+  display:grid; grid-template-columns: .8fr 1.4fr 1fr; gap: clamp(16px, 2.4vw, 32px);
+  font-family: var(--bfx-mouse); font-size: clamp(15px,1.25vw,17px); letter-spacing:.02em; line-height:1.38;
 }
 .bfx-footer-info .lbl{
   display:block; font-size: 13px; letter-spacing:.18em; text-transform:uppercase;
@@ -520,10 +523,11 @@ body.bfx-home .grain{ opacity:.35; }
 .bfx-footer-legal{
   position:relative; z-index:4;
   background: #17130e;
-  font-family: var(--bfx-mouse); font-size: 14.5px; letter-spacing:.04em;
+  font-family: var(--bfx-mouse); font-size: 14px; letter-spacing:.04em;
   color: var(--bfx-ink-mut);
   text-align:center;
-  padding: 18px 20px 26px;
+  padding: 10px 20px 12px;
+  border-top: 2px solid var(--bfx-hair);
 }
 .bfx-footer-legal p{ margin: 3px 0; }
 .bfx-footer-legal a{ text-decoration: underline; }
@@ -1016,9 +1020,9 @@ html.bfx-nofx [data-split]{ visibility:visible !important; }
   .bfx-hero-word{ font-size: 21vw; margin-top: 18px; }
   .bfx-badge{ font-size: 15px; border-width: 2.5px; }
   .bfx-polaroid-row{ flex-direction: column; align-items:center; }
-  .bfx-footer-info{ grid-template-columns: 1fr 1fr; gap: 22px; }
-  .bfx-footer-main{ text-align: center; }
+  .bfx-footer-main{ grid-template-columns: 1fr; text-align: center; }
   .bfx-footer-logo{ justify-content: center; }
+  .bfx-footer-info{ grid-template-columns: 1fr 1fr; gap: 18px; text-align:left; }
   /* nav mobile: reducir un toque el gigante para que no se salga */
   .bfx-giant--xl{ font-size: clamp(52px, 15vw, 120px); }
 }
@@ -1406,4 +1410,153 @@ body.bfx-admin *::-webkit-scrollbar-thumb:hover{ background: rgba(246,232,210,.3
   .adm-side-foot{ margin-top:0; border-top:none; }
   .adm-metrics{ grid-template-columns: repeat(2,1fr); }
   .adm-topbar{ padding:14px 18px; }
+}
+
+/* ============================================================
+   CTA FINAL del home — compacto: texto | reseñas
+   ============================================================ */
+.bfx-cta-grid{
+  display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  align-items:center; gap: clamp(24px, 4vw, 64px);
+}
+.bfx-cta-reviews{ display:flex; flex-direction:column; gap: 12px; align-items:center; }
+.bfx-reviewcard{ width: min(440px, 100%); padding: 14px 18px 12px !important; text-align:left; }
+.bfx-cta-reviews .bfx-reviewcard:nth-child(1){ align-self:flex-start; }
+.bfx-cta-reviews .bfx-reviewcard:nth-child(2){ align-self:flex-end; margin-top: -6px; }
+.bfx-cta-reviews .bfx-reviewcard:nth-child(3){ align-self:center; margin-top: -6px; }
+@media (max-width: 860px){
+  .bfx-cta-grid{ grid-template-columns: 1fr; text-align:center; }
+  .bfx-cta-text .bfx-copy{ margin-left:auto !important; margin-right:auto !important; }
+  .bfx-cta-reviews .bfx-reviewcard{ align-self:center !important; }
+}
+/* el wave de entrada al footer, más bajo: el footer ahora es compacto */
+.bfx-footer > .bfx-wave{ height: clamp(34px, 4vw, 64px); }
+
+/* ============================================================
+   MENÚ — pedido rápido: cabecera compacta, pestañas y grilla densa
+   ============================================================ */
+.bfx-menu-wrap{ width:100%; max-width: 1320px; margin: 0 auto; }
+.bfx-menu-top{ padding: clamp(26px, 4svh, 44px) 0 14px; }
+.bfx-menu-head{
+  padding: 0 24px;
+  display:grid; grid-template-columns: minmax(0,1fr) minmax(0, 520px);
+  align-items:end; gap: 18px 40px;
+}
+.bfx-menu-head .bfx-giant{ font-size: clamp(40px, 5vw, 76px); }
+.bfx-menu-sub{ margin: 10px 0 0 6px; font-size: 16px; letter-spacing:.06em; text-transform:uppercase; opacity:.7; }
+.bfx-catpill .n{
+  display:inline-grid; place-items:center; min-width: 22px; height: 22px; padding: 0 6px; margin-left: 6px;
+  border-radius: 20px; font-size: 13px; background: rgba(43,20,3,.1);
+}
+.bfx-catpill.on .n{ background: rgba(26,18,6,.18); }
+.bfx-menu-cathead{ display:flex; flex-wrap:wrap; align-items:baseline; gap: 6px 18px; margin-bottom: 14px; }
+.bfx-menu-cathead .kick{ font-size: 18px; letter-spacing:.06em; text-transform:uppercase; color: var(--bfx-mustard); }
+.bfx-menu-cathead .note{ font-size: 16px; letter-spacing:.02em; opacity:.75; display:inline-flex; gap:6px; align-items:center; }
+.bfx-menu-cat + .bfx-menu-cat{ margin-top: 30px; }
+/* 7 columnas en desktop: los 13 sabores entran en dos filas */
+.bfx-menu-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 14px; }
+.bfx-menu-grid .bfx-menucard{ padding: 8px 8px 10px; gap: 6px; border-radius: 16px; }
+.bfx-menu-grid .bfx-menucard:hover{ rotate: 0deg; }
+.bfx-menu-grid .bfx-menucard .photo{ aspect-ratio: 4/3; border-radius: 11px; }
+.bfx-menu-grid .bfx-menucard .name{ font-size: 18px; line-height: 1.02; min-height: 2.04em; }
+.bfx-menu-grid .bfx-menucard .desc{
+  font-size: 14.5px; line-height: 1.2;
+  display:-webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow:hidden;
+}
+.bfx-menu-grid .bfx-menucard .foot{ display:flex; align-items:center; justify-content:space-between; gap: 6px; }
+.bfx-menu-grid .bfx-menucard .price{ font-size: 21px; }
+.bfx-menu-grid .bfx-addbtn{ width: 36px; height: 36px; border-width: 2.5px; }
+.bfx-menu-grid .bfx-minitag{ font-size: 11px; }
+@media (max-width: 760px){
+  .bfx-menu-head{ grid-template-columns: 1fr; align-items:start; }
+  .bfx-menu-grid{ grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; }
+}
+
+/* ============================================================
+   NOSOTROS — mismo lenguaje que el home
+   ============================================================ */
+.bfx-about-hero .bfx-hero-h1{ font-size: clamp(50px, min(7.6vw, 13svh), 136px); }
+.bfx-about-stats{ display:flex; flex-wrap:wrap; gap: 12px; margin-top: clamp(16px, 2.6svh, 28px); }
+.bfx-about-stats .bfx-panel{ padding: 10px 18px 8px; text-align:center; }
+.bfx-about-stats .lbl{ font-size: 13px; letter-spacing:.12em; text-transform:uppercase; opacity:.6; }
+.bfx-about-wrap{ width:100%; max-width: 1320px; margin: 0 auto; padding: 0 24px; }
+.bfx-about-layershead{
+  display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap: 14px 40px;
+  padding-top: clamp(4px, 1vw, 16px);
+}
+/* las 5 capas en UNA fila de polaroids */
+.bfx-about-layers{
+  display:grid; grid-template-columns: repeat(5, minmax(0,1fr)); gap: clamp(14px, 1.8vw, 26px);
+  margin-top: clamp(26px, 3.4vw, 44px);
+}
+.bfx-layercard{ margin:0; }
+.bfx-layercard img{ aspect-ratio: 1.05; height:auto; }
+.bfx-layercard figcaption{
+  display:block; text-transform:none; letter-spacing:.02em;
+  font-size: clamp(15px, 1.15vw, 17px); line-height: 1.22; padding: 22px 4px 2px;
+}
+.bfx-about-close{
+  display:grid; grid-template-columns: minmax(0,1.1fr) minmax(0,.9fr); align-items:center; gap: clamp(24px,4vw,64px);
+}
+.bfx-about-photos{ position:relative; height: clamp(260px, 26vw, 380px); }
+.bfx-about-photos .bfx-polaroid{ position:absolute; width: 58%; margin:0; }
+.bfx-about-photos .bfx-polaroid img{ aspect-ratio: 1.1; height:auto; }
+.bfx-about-photos .bfx-polaroid:nth-of-type(1){ left: 0; top: 0; }
+.bfx-about-photos .bfx-polaroid:nth-of-type(2){ right: 0; bottom: 0; }
+@media (max-width: 1080px){
+  .bfx-about-layers{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+@media (max-width: 860px){
+  .bfx-about-layers{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .bfx-about-close{ grid-template-columns: 1fr; }
+  .bfx-about-stats{ justify-content:center; }
+}
+@media (max-width: 520px){
+  .bfx-about-layers{ gap: 12px; }
+  .bfx-layercard{ padding: 6px 6px 10px; }
+  .bfx-layercard figcaption{ font-size: 14px; padding-top: 18px; }
+  .bfx-layercard .bfx-badge{ font-size: 11px !important; }
+}
+
+/* ============================================================
+   CONTACTO — una sola pantalla
+   ============================================================ */
+.bfx-contact{
+  min-height: calc(100svh - 72px);
+  display:flex; align-items:center;
+  padding: clamp(44px, 7svh, 70px) 0 clamp(28px, 4svh, 44px);
+}
+.bfx-contact-grid{
+  width:100%; max-width: 1320px; margin: 0 auto; padding: 0 24px;
+  display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.1fr);
+  align-items:center; gap: clamp(24px, 4vw, 60px);
+}
+.bfx-contact-left .bfx-giant{ font-size: clamp(44px, min(5.6vw, 9.5svh), 96px); }
+.bfx-contact-form{
+  display:grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin-top: clamp(16px, 2.6svh, 26px); max-width: 560px;
+}
+.bfx-contact-form .bfx-input{ padding: 12px 16px 10px; font-size: 17px; border-radius: 14px; }
+.bfx-contact-form .bfx-pill-ylw{ font-size: 17px; padding: 13px 30px 11px; }
+.bfx-contact-right{ display:flex; flex-direction:column; gap: 14px; }
+.bfx-contact-map{ height: clamp(200px, 30svh, 300px); background: var(--bfx-night); }
+.bfx-contact-map > *{ height:100%; }
+.bfx-contact-info{ display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.15fr); gap: 14px; align-items:stretch; }
+.bfx-contact-cards{ display:grid; gap: 10px; }
+/* sobre el fondo oscuro las tarjetas tinta necesitan despegarse */
+.bfx-contact .bfx-panel--ink{ background: #241f18; border: 2px solid var(--bfx-hair); padding: 10px 16px 9px; border-radius: 16px; }
+.bfx-contact .bfx-panel--ink:hover{ border-color: var(--bfx-mustard); }
+.bfx-contact .t{ font-size: 12.5px; letter-spacing:.18em; text-transform:uppercase; color: var(--bfx-brand) !important; margin-bottom: 2px; }
+.bfx-contact .m{ font-size: 20px; }
+.bfx-contact .s{ font-size: 14px; opacity:.65; }
+.bfx-contact-hours .row{
+  display:flex; justify-content:space-between; gap: 10px;
+  font-size: 16px; padding: 4px 0; border-top: 2px dashed rgba(242,146,17,.28);
+}
+@media (max-width: 960px){
+  .bfx-contact{ min-height: 0; }
+  .bfx-contact-grid{ grid-template-columns: 1fr; }
+}
+@media (max-width: 560px){
+  .bfx-contact-form, .bfx-contact-info{ grid-template-columns: 1fr; }
 }

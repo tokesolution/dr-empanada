@@ -381,35 +381,35 @@ function Home({ go }) {
       </section>
 
       {/* ================= CTA FINAL ================= */}
-      <section style={{ textAlign: "center", overflow: "clip", paddingBottom: "clamp(60px,7vw,100px)" }} aria-label="Pedí ahora">
-        <Wave fill="#1a1611" style={{ background: "#241c12", marginBottom: "clamp(60px,8vw,110px)" }} />
-        <div className="wrap" style={{ position: "relative" }}>
-          <Sticker name="burger" size={150} data-pop data-idle style={{ position: "absolute", left: "3%", top: "-10%", "--rot": "-10deg" }} />
-          {/* zIndex 3: asoma POR DELANTE de las polaroids de reseñas */}
-          <Sticker name="burger" size={120} data-pop data-idle style={{ position: "absolute", right: "5%", bottom: "0%", "--rot": "12deg", zIndex: 3 }} />
-          <div className="bfx-kicker" data-pop>¿TE PICÓ EL ANTOJO?</div>
-          <h2 className="bfx-giant bfx-giant--xl" style={{ marginTop: 16 }}>
-            <span data-split="chars" style={{ display: "block" }}>PEDÍ</span>
-            <span data-split="chars" style={{ display: "block" }}><span className="ylw">AHORA.</span></span>
-          </h2>
-          <p className="bfx-copy" data-split="lines" style={{ maxWidth: 520, margin: "24px auto 34px" }}>
-            Armá tu pedido online en un minuto: elegís los sabores, sumás de a una y te avisamos cuando sale del horno. {isOpenNow() ? "Estamos abiertos ahora mismo." : "Abrimos de martes a sábado desde las 12."}
-          </p>
-          <a href="#/menu" className="bfx-blob" data-squash style={{ fontSize: "clamp(26px,3.2vw,40px)" }}>Pedir online →</a>
+      {/* Compacto: llamado a pedir a la izquierda y reseñas a la derecha, en
+          una sola pantalla (antes iba todo apilado y medía casi dos). */}
+      <section style={{ overflow: "clip", paddingBottom: "clamp(30px,4vw,60px)" }} aria-label="Pedí ahora">
+        <Wave fill="#1a1611" style={{ background: "#241c12", marginBottom: "clamp(24px,3vw,44px)" }} />
+        <div className="wrap bfx-cta-grid">
+          <div className="bfx-cta-text">
+            <div className="bfx-kicker" data-pop>¿TE PICÓ EL ANTOJO?</div>
+            <h2 className="bfx-giant bfx-giant--lg" style={{ marginTop: 12 }}>
+              <span data-split="chars" style={{ display: "block" }}>PEDÍ <span className="ylw">AHORA.</span></span>
+            </h2>
+            <p className="bfx-copy" data-split="lines" style={{ maxWidth: 480, margin: "16px 0 26px" }}>
+              Armá tu pedido online en un minuto: elegís los sabores, sumás de a una y te avisamos cuando sale del horno. {isOpenNow() ? "Estamos abiertos ahora mismo." : "Abrimos de martes a sábado desde las 12."}
+            </p>
+            <a href="#/menu" className="bfx-blob" data-squash style={{ fontSize: "clamp(20px,2vw,28px)" }}>Pedir online →</a>
+          </div>
 
-          {/* reseñas */}
-          <div style={{ display: "flex", justifyContent: "center", gap: "clamp(16px,2.6vw,36px)", marginTop: "clamp(50px,6vw,90px)", flexWrap: "wrap" }}>
+          {/* reseñas: polaroids encimadas en abanico */}
+          <div className="bfx-cta-reviews">
             {reviews.map((r, i) => (
-              <div key={r.name} className="bfx-polaroid" data-pop data-pop-delay={i * 0.12} data-inertia
-                style={{ "--rot": (i - 1) * 4 - 2 + "deg", width: "min(300px, 84vw)", padding: "18px 18px 16px", textAlign: "left" }}>
-                <div style={{ color: "var(--bfx-mustard)", fontSize: 18, letterSpacing: 2 }}>{"★".repeat(r.stars)}{"☆".repeat(5 - r.stars)}</div>
-                <p className="bfx-copy" style={{ fontSize: 18, margin: "8px 0 10px", lineHeight: 1.25 }}>“{r.text}”</p>
-                <div className="bfx-hand" style={{ textTransform: "uppercase", letterSpacing: ".1em", fontSize: 15, opacity: .6 }}>{r.name} · {r.when}</div>
+              <div key={r.name} className="bfx-polaroid bfx-reviewcard" data-pop data-pop-delay={i * 0.12} data-inertia
+                style={{ "--rot": [-4, 3, -2][i] + "deg" }}>
+                <div style={{ color: "var(--bfx-mustard)", fontSize: 16, letterSpacing: 2 }}>{"★".repeat(r.stars)}{"☆".repeat(5 - r.stars)}</div>
+                <p className="bfx-copy" style={{ fontSize: 17, margin: "6px 0 8px", lineHeight: 1.22 }}>“{r.text}”</p>
+                <div className="bfx-hand" style={{ textTransform: "uppercase", letterSpacing: ".1em", fontSize: 14, opacity: .6 }}>{r.name} · {r.when}</div>
               </div>
             ))}
-          </div>
-          <div className="bfx-hand" style={{ marginTop: 22, fontSize: 19, textTransform: "uppercase", letterSpacing: ".14em", opacity: .7 }}>
-            {BIZ.rating}★ · {BIZ.reviewsCount} reseñas en Google
+            <div className="bfx-hand" style={{ fontSize: 17, textTransform: "uppercase", letterSpacing: ".14em", opacity: .7, textAlign: "center" }}>
+              {BIZ.rating}★ · {BIZ.reviewsCount} reseñas en Google
+            </div>
           </div>
         </div>
       </section>

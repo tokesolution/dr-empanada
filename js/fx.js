@@ -111,7 +111,77 @@
       '</g>', "0 0 110 100"
     ),
   };
-  var ING_KEYS = ["tomato", "cheese", "lettuce", "patty", "fries", "beer", "pickle", "bacon"];
+  /* ---------- stickers de ingredientes v2 (footer y páginas) ----------
+     Estilo sticker: borde blanco grueso (halo), contorno marrón de tinta,
+     brillo y sombra interna. Son los rellenos reales de la carta. */
+  var INK = "#2b1403";
+  function halo(shape, fill, extra) {
+    return stk(
+      '<g fill="#fff" stroke="#fff" stroke-width="13" stroke-linejoin="round">' + shape + "</g>" +
+      '<g fill="' + fill + '" stroke="' + INK + '" stroke-width="3.5" stroke-linejoin="round" stroke-linecap="round">' + shape + "</g>" +
+      (extra || "")
+    );
+  }
+  var IK = 'stroke="' + INK + '" stroke-linecap="round" stroke-linejoin="round"';
+  var stem = function (d) {
+    return '<path d="' + d + '" fill="none" stroke="#fff" stroke-width="13" stroke-linecap="round"/>' +
+      '<path d="' + d + '" fill="none" ' + IK + ' stroke-width="9"/>' +
+      '<path d="' + d + '" fill="none" stroke="#5fb32a" stroke-width="4" stroke-linecap="round"/>';
+  };
+  STICKERS.emp = halo(
+    '<path d="M10 66 C10 38 28 22 50 22 C72 22 90 38 90 66 C64 74 36 74 10 66 Z"/>', "#f5b53d",
+    [[16, 53], [22, 42], [31, 33], [42, 27], [54, 26], [65, 29], [75, 36], [83, 46], [87, 57]].map(function (p) {
+      return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="5.5" fill="#e59a1f" ' + IK + ' stroke-width="2.5"/>';
+    }).join("") +
+    '<path d="M28 46 Q36 37 47 35" stroke="#fff3c8" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+    '<circle cx="40" cy="55" r="3.6" fill="' + INK + '"/><circle cx="60" cy="55" r="3.6" fill="' + INK + '"/>' +
+    '<path d="M44 62 Q50 67 56 62" fill="none" ' + IK + ' stroke-width="3"/>' +
+    '<ellipse cx="32" cy="61" rx="4.5" ry="2.6" fill="#f2785a" opacity=".75"/><ellipse cx="68" cy="61" rx="4.5" ry="2.6" fill="#f2785a" opacity=".75"/>'
+  );
+  STICKERS.morron = stem("M50 30 C50 20 54 13 63 11") + halo(
+    '<path d="M50 31 C36 23 18 31 20 55 C21 77 34 89 50 85 C66 89 79 77 80 55 C82 31 64 23 50 31 Z"/>', "#e5392b",
+    '<path d="M50 35 C46 51 46 70 50 85" stroke="#b3241a" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+    '<path d="M31 45 Q28 59 34 71" stroke="#ff9a88" stroke-width="5" fill="none" stroke-linecap="round"/>' +
+    '<path d="M37 31 Q50 22 63 31 Q50 37 37 31 Z" fill="#4f9a1e" ' + IK + ' stroke-width="3"/>'
+  );
+  STICKERS.aceituna = halo(
+    '<ellipse cx="48" cy="56" rx="30" ry="35" transform="rotate(-18 48 56)"/>', "#7da834",
+    '<ellipse cx="52" cy="52" rx="11" ry="13" transform="rotate(-18 52 52)" fill="#e2452f" ' + IK + ' stroke-width="3"/>' +
+    '<ellipse cx="36" cy="40" rx="5" ry="9" transform="rotate(-28 36 40)" fill="#c9e58a"/>' +
+    '<path d="M60 22 Q76 10 88 19 Q76 30 60 22 Z" fill="#5fb32a" ' + IK + ' stroke-width="3"/>'
+  );
+  STICKERS.huevo = halo(
+    '<path d="M50 12 C28 12 16 40 16 60 C16 80 32 90 50 90 C68 90 84 80 84 60 C84 40 72 12 50 12 Z"/>', "#fff6e2",
+    '<circle cx="50" cy="61" r="18" fill="#ffc226" ' + IK + ' stroke-width="3"/>' +
+    '<circle cx="44" cy="55" r="5" fill="#ffe28a"/>' +
+    '<path d="M29 40 Q33 28 41 23" stroke="#e8d6b0" stroke-width="4" fill="none" stroke-linecap="round"/>'
+  );
+  STICKERS.cebolla = stem("M50 18 C48 10 52 5 58 3") + halo(
+    '<path d="M50 16 C46 26 22 35 20 59 C18 81 34 91 50 91 C66 91 82 81 80 59 C78 35 54 26 50 16 Z"/>', "#c25b8d",
+    '<path d="M50 22 C40 36 34 52 37 88 M50 22 C60 36 66 52 63 88" stroke="#93365f" stroke-width="3" fill="none" stroke-linecap="round"/>' +
+    '<path d="M29 54 Q29 68 35 78" stroke="#eaa6c7" stroke-width="5" fill="none" stroke-linecap="round"/>'
+  );
+  STICKERS.queso = halo(
+    '<path d="M10 48 L68 22 L90 41 L90 74 L10 80 Z"/>', "#ffd34a",
+    '<path d="M10 48 L90 41 L90 74 L10 80 Z" fill="#f5b520" ' + IK + ' stroke-width="3.5"/>' +
+    '<ellipse cx="32" cy="62" rx="6.5" ry="5.5" fill="#d98f0f"/><ellipse cx="60" cy="66" rx="4.5" ry="4" fill="#d98f0f"/>' +
+    '<ellipse cx="74" cy="54" rx="3.5" ry="3" fill="#d98f0f"/><ellipse cx="52" cy="36" rx="6" ry="2.6" fill="#f1b21f"/>' +
+    '<path d="M24 44 L56 30" stroke="#fff1b0" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
+  );
+  STICKERS.aji = stem("M33 28 C33 19 39 12 48 11") + halo(
+    '<path d="M25 31 C21 53 33 79 71 89 C80 91 83 84 76 80 C52 70 42 55 42 33 C42 24 29 22 25 31 Z"/>', "#e3341f",
+    '<path d="M31 39 C31 55 41 68 60 79" stroke="#ff8b74" stroke-width="4" fill="none" stroke-linecap="round"/>' +
+    '<ellipse cx="33" cy="29" rx="10.5" ry="5" fill="#4f9a1e" ' + IK + ' stroke-width="3"/>'
+  );
+  STICKERS.pastelito = stk(
+    '<g fill="#fff" stroke="#fff" stroke-width="13" stroke-linejoin="round">' +
+    '<rect x="21" y="21" width="58" height="58" rx="9"/><rect x="21" y="21" width="58" height="58" rx="9" transform="rotate(45 50 50)"/></g>' +
+    '<rect x="21" y="21" width="58" height="58" rx="9" fill="#efa43a" ' + IK + ' stroke-width="3.5"/>' +
+    '<rect x="21" y="21" width="58" height="58" rx="9" transform="rotate(45 50 50)" fill="#f8c463" ' + IK + ' stroke-width="3.5"/>' +
+    '<circle cx="50" cy="50" r="13" fill="#c8352a" ' + IK + ' stroke-width="3"/><circle cx="45.5" cy="45.5" r="3.6" fill="#ef7a63"/>' +
+    '<g fill="#fff"><circle cx="33" cy="30" r="2"/><circle cx="68" cy="33" r="2"/><circle cx="72" cy="64" r="2"/><circle cx="30" cy="68" r="2"/><circle cx="50" cy="22" r="1.8"/><circle cx="50" cy="79" r="1.8"/></g>'
+  );
+  var ING_KEYS = ["emp", "morron", "aceituna", "huevo", "cebolla", "queso", "aji", "pastelito"];
 
   /* ---------- estado global ---------- */
   var FX = {
@@ -530,7 +600,7 @@
         var items = zone.querySelectorAll(".bfx-ing");
         var live = new Set();
         var launch = function (el) {
-          var apex = rand(38, 66);          // vh hacia arriba
+          var apex = rand(16, 32);          // vh hacia arriba (footer compacto: saltos más cortos)
           var drift = rand(-8, 8);          // vw lateral
           var spin = (Math.random() > .5 ? 1 : -1) * rand(60, 200);
           var up = rand(.6, .85), down = up * rand(1.02, 1.18), total = up + down;

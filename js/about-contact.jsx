@@ -1,114 +1,140 @@
 /* ============================================================
-   about-contact.jsx — Nosotros (estilo "Our Spices" de crav),
-   Contacto (estilo "Contact") y Privacidad (legales, tema oscuro).
+   about-contact.jsx — Nosotros (mismo lenguaje que el home),
+   Contacto (una sola pantalla) y Privacidad (legales, tema oscuro).
    ============================================================ */
 
-/* ===================== NOSOTROS ===================== */
+/* ===================== NOSOTROS =====================
+   Mismo lenguaje que el home: hero en una pantalla con títere + palabra
+   gigante, la historia en una fila de polaroids (antes 5 bloques apilados
+   que obligaban a scrollear mucho) y el cierre "desde 1989" en dos columnas.
+   La información es la misma de antes. */
 function Nosotros({ go }) {
   const ref = React.useRef(null);
   React.useEffect(() => (window.FX ? FX.bind(ref.current) : undefined), []);
 
-  // historia por capas (estilo "A story in every bite")
   const story = [
-    { tag: "MASA CASERA", cls: "bfx-badge--green", img: "assets/horno-tabla.jpg", rot: 3, txt: "Masa propia estirada en el día: finita, elástica y con el punto justo de horno." },
-    { tag: "RELLENO GENEROSO", cls: "bfx-badge--red", img: "assets/carne-corte.jpg", rot: -4, txt: "Carne cortada a cuchillo, cebolla dorada lenta y rellenos que se cocinan a fuego lento." },
-    { tag: "QUESO QUE SE ESTIRA", cls: "", img: "assets/empanadas/provolone.jpg", rot: 4, txt: "Muzzarella, provolone y cheddar de verdad, que se funden y se estiran en cada bocado." },
-    { tag: "REPULGUE A MANO", cls: "bfx-badge--red", img: "assets/repulgue.jpg", rot: -3, txt: "Cada empanada cerrada a mano, con el repulgue de siempre. Así se distingue cada sabor." },
-    { tag: "PASTELITOS CROCANTES", cls: "bfx-badge--green", img: "assets/pastelitos-membrillo.jpg", rot: 5, txt: "Hojaldre frito y crocante con membrillo, batata o dulce de leche. El final obligado." },
+    { tag: "MASA CASERA", cls: "bfx-badge--green", img: "assets/horno-tabla.jpg", rot: -3, txt: "Masa propia estirada en el día: finita, elástica y con el punto justo de horno." },
+    { tag: "RELLENO GENEROSO", cls: "bfx-badge--red", img: "assets/carne-corte.jpg", rot: 2, txt: "Carne cortada a cuchillo, cebolla dorada lenta y rellenos que se cocinan a fuego lento." },
+    { tag: "QUESO QUE SE ESTIRA", cls: "", img: "assets/empanadas/provolone.jpg", rot: -2, txt: "Muzzarella, provolone y cheddar de verdad, que se funden y se estiran en cada bocado." },
+    { tag: "REPULGUE A MANO", cls: "bfx-badge--red", img: "assets/repulgue.jpg", rot: 3, txt: "Cada empanada cerrada a mano, con el repulgue de siempre. Así se distingue cada sabor." },
+    { tag: "PASTELITOS CROCANTES", cls: "bfx-badge--green", img: "assets/pastelitos-membrillo.jpg", rot: -2, txt: "Hojaldre frito y crocante con membrillo, batata o dulce de leche. El final obligado." },
   ];
+  const stats = [["+35", "años de historia"], [BIZ.rating + "★", "en Google"], ["13", "sabores"], ["100%", "casero"]];
 
   return (
     <main ref={ref} className="bfx">
-      {/* hero */}
-      <section className="bfx-page-hero" aria-label="Nuestra historia">
-        <div className="wrap" style={{ position: "relative" }}>
-          <Sticker name="lettuce" size={110} data-pop data-idle style={{ position: "absolute", left: "3%", top: 0, "--rot": "-10deg" }} />
-          <Sticker name="tomato" size={95} data-pop data-idle style={{ position: "absolute", right: "4%", top: 60, "--rot": "12deg" }} />
-          <div className="bfx-kicker" data-pop>★ NUESTRA HISTORIA ★</div>
-          <h1 className="bfx-giant bfx-giant--lg" style={{ marginTop: 14 }}>
-            <span data-split="chars" style={{ display: "block" }}>QUÉ HAY</span>
-            <span data-split="chars" style={{ display: "block" }}><span className="ylw">ADENTRO.</span></span>
-          </h1>
-          <p className="bfx-copy" data-split="lines" style={{ maxWidth: 560, margin: "22px auto 0" }}>
-            No tenemos una lista larga de ingredientes: tenemos una corta, y somos obsesivos con cada cosa que entra.
-            Desde 1989 haciendo la empanada que nos gustaría comer.
-          </p>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 12, justifyContent: "center", marginTop: 28 }}>
-            {[["+35", "años de historia"], [BIZ.rating + "★", "en Google"], ["13", "sabores"], ["100%", "casero"]].map(([n, l], i) => (
-              <div key={l} className="bfx-panel" data-pop data-pop-delay={i * 0.08}
-                style={{ padding: "14px 22px 12px", rotate: ((i % 2 ? 1 : -1) * 2) + "deg", textAlign: "center" }}>
-                <div className="bfx-bubble" style={{ fontSize: 30 }}>{n}</div>
-                <div className="bfx-hand" style={{ fontSize: 15, letterSpacing: ".12em", textTransform: "uppercase", opacity: .6 }}>{l}</div>
+      {/* ===== HERO ===== */}
+      <section className="bfx-hero bfx-about-hero" aria-label="Nuestra historia">
+        <div className="bfx-hero-grid">
+          <div className="bfx-hero-text">
+            <div className="bfx-kicker" data-pop>★ NUESTRA HISTORIA ★</div>
+            <h1 className="bfx-giant bfx-hero-h1" aria-label="Qué hay adentro">
+              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}>QUÉ HAY</span>
+              <span aria-hidden="true" data-split="chars" style={{ display: "block" }}><span className="ylw">ADENTRO.</span></span>
+            </h1>
+            <p className="bfx-copy bfx-hero-lead" data-split="lines">
+              No tenemos una lista larga de ingredientes: tenemos una corta, y somos obsesivos con cada cosa que entra.
+              Desde 1989 haciendo la empanada que nos gustaría comer.
+            </p>
+            <div className="bfx-about-stats">
+              {stats.map(([n, l], i) => (
+                <div key={l} className="bfx-panel" data-pop data-pop-delay={0.5 + i * 0.08}
+                  style={{ rotate: ((i % 2 ? 1 : -1) * 2) + "deg" }}>
+                  <div className="bfx-bubble" style={{ fontSize: 28 }}>{n}</div>
+                  <div className="bfx-hand lbl">{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bfx-hero-puppet">
+            <div className="bfx-hero-burger" data-pop data-pop-delay=".35" data-inertia>
+              <div className="bfx-blobphoto" data-idle style={{ width: "100%", height: "100%" }}>
+                <img src="assets/repulgue.jpg" alt="Repulgue hecho a mano en Dr. Empanada" />
               </div>
-            ))}
+              <GooglyEyes style={{ left: "22%", top: "8%", width: "56%" }} />
+            </div>
+            <span className="bfx-badge" data-pop data-pop-delay=".9" data-idle
+              style={{ "--rot": "8deg", position: "absolute", right: "-2%", top: "6%", zIndex: 3 }}>DESDE 1989</span>
+            <span className="bfx-badge bfx-badge--red" data-pop data-pop-delay="1.05" data-idle
+              style={{ "--rot": "-7deg", position: "absolute", left: "-4%", bottom: "14%", zIndex: 3 }}>MELINCUÉ 4399</span>
           </div>
         </div>
+        <div className="bfx-hero-word bfx-bubble" aria-hidden="true" data-pop data-pop-delay=".4">CASERAS</div>
       </section>
 
-      {/* historia por capas — mostaza estilo crav */}
-      <section className="bfx-mustardsec" style={{ padding: "0 0 clamp(70px,8vw,120px)", overflow: "clip" }} aria-label="Una historia en cada capa">
+      {/* ===== UNA HISTORIA EN CADA CAPA (naranja) ===== */}
+      <section className="bfx-mustardsec" style={{ padding: "0 0 clamp(40px,5vw,70px)", overflow: "clip" }} aria-label="Una historia en cada capa">
         <Wave fill="#f2900d" style={{ background: "var(--bfx-cream)" }} />
-        <div className="wrap" style={{ position: "relative", paddingTop: "clamp(40px,5vw,70px)" }}>
-          <h2 className="bfx-giant bfx-giant--lg bfx-giant--outline" style={{ textAlign: "left" }}>
-            <span data-split="chars" style={{ display: "block" }}>UNA HISTORIA</span>
-            <span data-split="chars" style={{ display: "block" }}>EN CADA CAPA.</span>
-          </h2>
-          <p className="bfx-copy" data-split="lines" style={{ maxWidth: 460, marginTop: 18, color: "#4a2c00" }}>
-            No elegimos ingredientes de una lista: pensamos de dónde vienen, por qué importan y qué le suman a cada empanada.
-          </p>
+        <div className="bfx-about-wrap" style={{ position: "relative" }}>
+          <div className="bfx-about-layershead">
+            <h2 className="bfx-giant bfx-giant--md bfx-giant--outline" style={{ textAlign: "left" }}>
+              <span data-split="chars" style={{ display: "block" }}>UNA HISTORIA</span>
+              <span data-split="chars" style={{ display: "block" }}>EN CADA CAPA.</span>
+            </h2>
+            <p className="bfx-copy" data-split="lines" style={{ maxWidth: 440, color: "#4a2c00", margin: 0 }}>
+              No elegimos ingredientes de una lista: pensamos de dónde vienen, por qué importan y qué le suman a cada empanada.
+            </p>
+          </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: "clamp(40px,5vw,70px)", marginTop: "clamp(40px,5vw,70px)" }}>
+          <div className="bfx-about-layers">
             {story.map((s, i) => (
-              <div key={s.tag} style={{
-                display: "flex", alignItems: "center", gap: "clamp(20px,4vw,60px)",
-                flexDirection: i % 2 ? "row-reverse" : "row", flexWrap: "wrap", justifyContent: "center",
-              }}>
+              <figure key={s.tag} className="bfx-polaroid bfx-layercard" data-pop data-pop-delay={i * 0.08} data-inertia
+                style={{ "--rot": s.rot + "deg" }}>
                 <div style={{ position: "relative" }}>
-                  <div className="bfx-stickerframe" data-pop data-inertia style={{ width: "min(380px,84vw)", rotate: s.rot + "deg" }}>
-                    <img src={s.img} alt={s.tag} loading="lazy" style={{ aspectRatio: "1.15", objectFit: "cover", width: "100%" }} />
-                  </div>
-                  <span className={"bfx-badge " + s.cls} data-pop data-pop-delay=".15"
-                    style={{ "--rot": (s.rot > 0 ? -6 : 6) + "deg", position: "absolute", top: -18, left: i % 2 ? "auto" : -14, right: i % 2 ? -14 : "auto" }}>
+                  <img src={s.img} alt={s.tag} loading="lazy" />
+                  <span className={"bfx-badge " + s.cls} style={{ "--rot": (s.rot > 0 ? -5 : 5) + "deg", position: "absolute", left: 8, bottom: -14, fontSize: 14 }}>
                     {s.tag}
                   </span>
                 </div>
-                <p className="bfx-copy" data-split="lines" style={{ maxWidth: 380, color: "#4a2c00", fontSize: "clamp(20px,2vw,26px)", textAlign: i % 2 ? "right" : "left" }}>
-                  {s.txt}
-                </p>
-              </div>
+                <figcaption>{s.txt}</figcaption>
+              </figure>
             ))}
           </div>
         </div>
       </section>
 
-      {/* de villa devoto para el barrio */}
-      <section style={{ padding: "clamp(70px,9vw,120px) 0 0", textAlign: "center" }} aria-label="De Villa Devoto">
-        <div className="wrap" style={{ position: "relative" }}>
-          <Sticker name="beer" size={110} data-pop data-idle style={{ position: "absolute", right: "3%", top: -20, "--rot": "10deg" }} />
-          <span className="bfx-badge bfx-badge--red" data-pop data-idle style={{ "--rot": "-6deg" }}>MELINCUÉ 4399</span>
-          <h2 className="bfx-giant bfx-giant--lg" style={{ marginTop: 18 }}>
-            <span data-split="chars" style={{ display: "block" }}>DESDE 1989,</span>
-            <span data-split="chars" style={{ display: "block" }}><span className="ylw">CON HAMBRE.</span></span>
-          </h2>
-          <p className="bfx-copy" data-split="lines" style={{ maxWidth: 560, margin: "22px auto 0" }}>
-            Arrancamos con un horno, una masa casera y cero vueltas. Hoy servimos en el salón, llevamos con delivery propio
-            y horneamos todos los días menos los lunes. Docenas surtidas para juntadas, docena en promo los viernes y
-            promo mediodía de martes a sábado.
-          </p>
-          <div style={{ display: "flex", gap: 14, justifyContent: "center", marginTop: 30, flexWrap: "wrap" }}>
-            <a href={"https://instagram.com/" + BIZ.ig} target="_blank" rel="noopener" className="bfx-pill-ylw" style={{ fontSize: 18 }}>
-              <Ic.ig width={18} height={18} /> Seguinos
-            </a>
-            <a href="#/menu" className="bfx-blob" style={{ fontSize: 20 }} data-squash>Ver el menú →</a>
+      {/* ===== DESDE 1989 ===== */}
+      <section style={{ padding: "0 0 clamp(40px,5vw,70px)", overflow: "clip" }} aria-label="De Villa Devoto">
+        <Wave fill="#1a1611" style={{ background: "#f2900d", marginBottom: "clamp(24px,3vw,44px)" }} />
+        <div className="bfx-about-wrap bfx-about-close">
+          <div>
+            <span className="bfx-badge bfx-badge--red" data-pop data-idle style={{ "--rot": "-6deg" }}>MELINCUÉ 4399 · VILLA DEVOTO</span>
+            <h2 className="bfx-giant bfx-giant--md" style={{ marginTop: 16 }}>
+              <span data-split="chars" style={{ display: "block" }}>DESDE 1989,</span>
+              <span data-split="chars" style={{ display: "block" }}><span className="ylw">CON HAMBRE.</span></span>
+            </h2>
+            <p className="bfx-copy" data-split="lines" style={{ maxWidth: 540, margin: "18px 0 0" }}>
+              Arrancamos con un horno, una masa casera y cero vueltas. Hoy servimos en el salón, llevamos con delivery propio
+              y horneamos todos los días menos los lunes. Docenas surtidas para juntadas, docena en promo los viernes y
+              promo mediodía de martes a sábado.
+            </p>
+            <div style={{ display: "flex", gap: 14, marginTop: 24, flexWrap: "wrap", alignItems: "center" }}>
+              <a href="#/menu" className="bfx-blob" style={{ fontSize: 20 }} data-squash>Ver el menú →</a>
+              <a href={"https://instagram.com/" + BIZ.ig} target="_blank" rel="noopener" className="bfx-pill-ylw" style={{ fontSize: 18 }}>
+                <Ic.ig width={18} height={18} /> Seguinos
+              </a>
+            </div>
+          </div>
+          <div className="bfx-about-photos" aria-hidden="true">
+            <figure className="bfx-polaroid" data-pop data-inertia style={{ "--rot": "-5deg" }}>
+              <img src="assets/horno-fila.jpg" alt="" loading="lazy" />
+            </figure>
+            <figure className="bfx-polaroid" data-pop data-pop-delay=".12" data-inertia style={{ "--rot": "6deg" }}>
+              <img src="assets/promo-bandeja.jpg" alt="" loading="lazy" />
+            </figure>
+            <Sticker name="emp" size={96} data-pop data-idle style={{ position: "absolute", right: "-2%", bottom: "-6%", "--rot": "12deg", zIndex: 3 }} />
           </div>
         </div>
       </section>
-
     </main>
   );
 }
 
-/* ===================== CONTACTO ===================== */
+/* ===================== CONTACTO =====================
+   Todo en UNA pantalla: a la izquierda el titular y el formulario (sale a
+   WhatsApp), a la derecha el mapa, los datos y los horarios. Scrolleando
+   se llega directo al footer. Misma información que antes. */
 function Contacto({ go }) {
   const ref = React.useRef(null);
   React.useEffect(() => (window.FX ? FX.bind(ref.current) : undefined), []);
@@ -119,81 +145,70 @@ function Contacto({ go }) {
     window.open(waLink(text), "_blank", "noopener");
   };
   const set = (k) => (e) => setF({ ...f, [k]: e.target.value });
+  const cards = [
+    ["Dónde", BIZ.address, BIZ.city, "https://www.google.com/maps/search/?api=1&query=Melincu%C3%A9+4399+Villa+Devoto+CABA"],
+    ["WhatsApp", BIZ.phoneDisplay, "Pedidos y consultas", waLink("¡Hola Dr. Empanada! Tengo una consulta 🥟")],
+    ["Instagram", "@" + BIZ.ig, "Novedades y promos", "https://instagram.com/" + BIZ.ig],
+  ];
 
   return (
     <main ref={ref} className="bfx">
-      {/* hero + form sobre rojo */}
-      <section className="bfx-red" style={{ paddingTop: 110, overflow: "clip" }} aria-label="Contacto">
-        <div className="wrap" style={{ textAlign: "center", position: "relative", paddingBottom: 20 }}>
-          <Sticker name="cheese" size={100} data-pop data-idle style={{ position: "absolute", left: "3%", top: 0, "--rot": "-12deg" }} />
-          <Sticker name="bacon" size={100} data-pop data-idle style={{ position: "absolute", right: "3%", top: 50, "--rot": "10deg" }} />
-          <div className="bfx-kicker" data-pop style={{ color: "#f6e8d2" }}>★ DECÍ HOLA ★</div>
-          <h1 className="bfx-giant bfx-giant--lg bfx-giant--cream" style={{ marginTop: 14 }}>
-            <span data-split="chars" style={{ display: "block" }}>¿SE TE ANTOJA?</span>
-            <span data-split="chars" style={{ display: "block" }}><span className="soft">HABLEMOS.</span></span>
-          </h1>
-          <p className="bfx-copy" data-split="lines" style={{ maxWidth: 520, margin: "20px auto 0" }}>
-            Eventos, pedidos grandes, cumpleaños o simplemente hambre: escribinos y el mensaje sale directo a nuestro WhatsApp.
-          </p>
+      <section className="bfx-contact" aria-label="Contacto">
+        <div className="bfx-contact-grid">
+          {/* izquierda: titular + formulario */}
+          <div className="bfx-contact-left">
+            <div className="bfx-kicker" data-pop>★ DECÍ HOLA ★</div>
+            <h1 className="bfx-giant bfx-giant--md" style={{ marginTop: 10 }}>
+              <span data-split="chars" style={{ display: "block" }}>¿SE TE ANTOJA?</span>
+              <span data-split="chars" style={{ display: "block" }}><span className="ylw">HABLEMOS.</span></span>
+            </h1>
+            <p className="bfx-copy" data-split="lines" style={{ maxWidth: 500, margin: "14px 0 0" }}>
+              Eventos, pedidos grandes, cumpleaños o simplemente hambre: escribinos y el mensaje sale directo a nuestro WhatsApp.
+            </p>
 
-          <form onSubmit={submit} style={{ maxWidth: 560, margin: "34px auto 0", display: "grid", gap: 14, textAlign: "left" }}>
-            <input className="bfx-input" required placeholder="Tu nombre" value={f.nombre} onChange={set("nombre")} aria-label="Nombre" />
-            <input className="bfx-input" placeholder="Tu WhatsApp (opcional)" value={f.tel} onChange={set("tel")} aria-label="WhatsApp" />
-            <textarea className="bfx-input" required rows={4} placeholder="Contanos qué se te antoja…" value={f.msg} onChange={set("msg")} aria-label="Mensaje" style={{ resize: "vertical" }} />
-            <div style={{ textAlign: "center", marginTop: 6 }}>
-              <button type="submit" className="bfx-pill-ylw" data-squash>Enviar</button>
-            </div>
-          </form>
-          <div style={{ height: "clamp(40px,5vw,70px)" }} />
-        </div>
-      </section>
-
-      {/* info + mapa sobre naranja de marca.
-          El wave entra al revés que antes: arriba el negro de la sección del
-          formulario y abajo el naranja. El fondo del wave usa #191510 (el
-          color exacto de .bfx-red / --bfx-dark-sec, la sección de arriba)
-          para que no quede el escalón entre dos negros parecidos. */}
-      <section className="bfx-contactinfo" aria-label="Dónde estamos">
-        <Wave fill="#f29212" style={{ background: "#191510" }} />
-        <div className="wrap" style={{ paddingTop: "clamp(20px,3vw,40px)" }}>
-          <div className="bf-two" style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "clamp(24px,4vw,50px)", alignItems: "start" }}>
-            <div style={{ display: "grid", gap: 16 }}>
-              {[
-                ["Dónde", BIZ.address, BIZ.city, "https://www.google.com/maps/search/?api=1&query=Melincu%C3%A9+4399+Villa+Devoto+CABA"],
-                ["WhatsApp", BIZ.phoneDisplay, "Pedidos y consultas", waLink("¡Hola Dr. Empanada! Tengo una consulta 🥟")],
-                ["Instagram", "@" + BIZ.ig, "Novedades y promos", "https://instagram.com/" + BIZ.ig],
-              ].map(([t, m, s, href], i) => (
-                <a key={t} href={href} target="_blank" rel="noopener" className="bfx-panel bfx-panel--ink" data-pop data-pop-delay={i * 0.08}
-                  style={{ rotate: ((i % 2 ? 1 : -1) * 1.2) + "deg", display: "block" }}>
-                  <div className="bfx-hand" style={{ fontSize: 14, letterSpacing: ".18em", textTransform: "uppercase", color: "var(--bfx-brand)", marginBottom: 4 }}>{t}</div>
-                  <div className="bfx-bubble" style={{ fontSize: 24 }}>{m}</div>
-                  <div className="bfx-hand" style={{ fontSize: 16, opacity: .65 }}>{s}</div>
-                </a>
-              ))}
-              <div className="bfx-panel bfx-panel--ink" data-pop data-pop-delay=".24" style={{ rotate: "1.2deg" }}>
-                <div className="bfx-hand" style={{ fontSize: 14, letterSpacing: ".18em", textTransform: "uppercase", color: "var(--bfx-brand)", marginBottom: 8 }}>Horarios</div>
-                {BIZ.hours.map((h) => (
-                  <div key={h.d} className="bfx-hand" style={{ display: "flex", justifyContent: "space-between", fontSize: 18, padding: "4px 0", borderTop: "2px dashed rgba(242,146,17,.28)", opacity: h.closed ? .6 : 1 }}>
-                    <span>{h.d}</span><span style={{ color: h.closed ? "var(--bfx-brand)" : "inherit" }}>{h.h}</span>
-                  </div>
-                ))}
-                <div className="bfx-hand" style={{ fontSize: 16, color: "var(--bfx-green)", marginTop: 8 }}>★ Promo mediodía · {HAPPY.when.toLowerCase()}</div>
+            <form onSubmit={submit} className="bfx-contact-form">
+              <input className="bfx-input" required placeholder="Tu nombre" value={f.nombre} onChange={set("nombre")} aria-label="Nombre" />
+              <input className="bfx-input" placeholder="Tu WhatsApp (opcional)" value={f.tel} onChange={set("tel")} aria-label="WhatsApp" />
+              <textarea className="bfx-input" required rows={3} placeholder="Contanos qué se te antoja…" value={f.msg} onChange={set("msg")} aria-label="Mensaje" style={{ resize: "vertical", gridColumn: "1 / -1" }} />
+              <div style={{ gridColumn: "1 / -1" }}>
+                <button type="submit" className="bfx-pill-ylw" data-squash>Enviar por WhatsApp</button>
               </div>
-            </div>
+            </form>
+          </div>
 
-            <div className="bfx-stickerframe" data-pop style={{ rotate: "-.8deg" }}>
+          {/* derecha: mapa + datos + horarios */}
+          <div className="bfx-contact-right">
+            <div className="bfx-stickerframe bfx-contact-map" data-pop style={{ rotate: "-.8deg" }}>
               <iframe
                 title="Mapa Dr. Empanada"
                 src="https://maps.google.com/maps?q=Melincu%C3%A9%204399%2C%20Villa%20Devoto%2C%20CABA&t=&z=16&ie=UTF8&iwloc=&output=embed"
-                style={{ border: 0, width: "100%", height: "100%", minHeight: 520 }}
+                style={{ border: 0, width: "100%", height: "100%" }}
                 loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+            </div>
+            <div className="bfx-contact-info">
+              <div className="bfx-contact-cards">
+                {cards.map(([t, m, s, href], i) => (
+                  <a key={t} href={href} target="_blank" rel="noopener" className="bfx-panel bfx-panel--ink" data-pop data-pop-delay={i * 0.08}
+                    style={{ rotate: ((i % 2 ? 1 : -1) * 1) + "deg" }}>
+                    <div className="bfx-hand t">{t}</div>
+                    <div className="bfx-bubble m">{m}</div>
+                    <div className="bfx-hand s">{s}</div>
+                  </a>
+                ))}
+              </div>
+              <div className="bfx-panel bfx-panel--ink bfx-contact-hours" data-pop data-pop-delay=".24" style={{ rotate: "1deg" }}>
+                <div className="bfx-hand t">Horarios</div>
+                {BIZ.hours.map((h) => (
+                  <div key={h.d} className="bfx-hand row" style={{ opacity: h.closed ? .6 : 1 }}>
+                    <span>{h.d}</span><span style={{ color: h.closed ? "var(--bfx-brand)" : "inherit" }}>{h.h}</span>
+                  </div>
+                ))}
+                <div className="bfx-hand" style={{ fontSize: 15, color: "var(--bfx-green)", marginTop: 8 }}>★ Promo mediodía · {HAPPY.when.toLowerCase()}</div>
+              </div>
             </div>
           </div>
         </div>
-        {/* y vuelta al fondo oscuro para el CTA final */}
-        <Wave fill="#1a1611" style={{ background: "#f29212", marginTop: "clamp(40px,5vw,70px)" }} />
       </section>
-
     </main>
   );
 }

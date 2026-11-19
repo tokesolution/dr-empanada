@@ -8,48 +8,30 @@ function MenuPage({ go }) {
   const store = useStore();
   const [active, setActive] = React.useState(MENU[0].id);
   const [query, setQuery] = React.useState("");
-  const refs = React.useRef({});
   const heroRef = React.useRef(null);
   React.useEffect(() => (window.FX ? FX.bind(heroRef.current) : undefined), []);
 
-  React.useEffect(() => {
-    const obs = new IntersectionObserver((entries) => {
-      entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.dataset.cat); });
-    }, { rootMargin: "-170px 0px -65% 0px" });
-    Object.values(refs.current).forEach((el) => el && obs.observe(el));
-    return () => obs.disconnect();
-  }, [query]);
-
-  const jump = (id) => {
-    const el = refs.current[id];
-    if (!el) return;
-    const y = el.offsetTop - 150;
-    if (window.FX && FX.lenis) FX.lenis.scrollTo(y, { duration: .9 });
-    else window.scrollTo({ top: y, behavior: "smooth" });
-  };
-
+  /* Pedido rápido: las categorías son PESTAÑAS (se ve una sola por vez) en
+     vez de una página larguísima con todo apilado. El buscador busca en toda
+     la carta y muestra los resultados agrupados. */
   const q = query.trim().toLowerCase();
   const matches = (i) => !q || (i.name + " " + (i.desc || "") + " " + (i.brewery || "")).toLowerCase().includes(q);
-  const visible = MENU.map((c) => ({ ...c, items: c.items.filter(matches) })).filter((c) => c.items.length);
+  const results = MENU.map((c) => ({ ...c, items: c.items.filter(matches) })).filter((c) => c.items.length);
+  const shown = q ? results : MENU.filter((c) => c.id === active);
 
   return (
     <main className="bfx">
-      {/* hero */}
-      <section ref={heroRef} className="bfx-page-hero" aria-label="La carta">
-        <div className="wrap" style={{ position: "relative" }}>
-          <Sticker name="burger" size={120} data-pop data-idle style={{ position: "absolute", left: "2%", top: -10, "--rot": "-12deg" }} />
-          <Sticker name="fries" size={100} data-pop data-idle style={{ position: "absolute", right: "3%", top: 40, "--rot": "10deg" }} />
-          <div className="bfx-kicker" data-pop>★ LA CARTA COMPLETA ★</div>
-          <h1 className="bfx-giant bfx-giant--lg" style={{ marginTop: 14 }}>
-            <span data-split="chars" style={{ display: "block" }}>COMÉ COMO</span>
-            <span data-split="chars" style={{ display: "block" }}><span className="ylw">SE DEBE.</span></span>
-          </h1>
-          <p className="bfx-copy" data-split="lines" style={{ maxWidth: 520, margin: "22px auto 0" }}>
-            Sumá lo que quieras al carrito y pedí online: delivery propio o take away. Al horno o fritas, al mismo precio.
-          </p>
-          {/* el buscador acompaña el ancho del párrafo de arriba (520px) */}
-          <div style={{ marginTop: 24, display: "flex", flexDirection: "column", alignItems: "center", gap: 14 }}>
-            <div style={{ position: "relative", width: "min(520px, 100%)" }}>
+      {/* cabecera compacta: título a la izquierda, buscador a la derecha */}
+      <section ref={heroRef} className="bfx-menu-top" aria-label="La carta">
+        <div className="bfx-menu-wrap bfx-menu-head">
+          <div>
+            <div className="bfx-kicker" data-pop>★ LA CARTA ★</div>
+            <h1 className="bfx-giant bfx-giant--md" style={{ marginTop: 8 }}>
+              <span data-split="chars">ELEGÍ, SUMÁ </span><span data-split="chars" className="ylw">Y LISTO.</span>
+            </h1>
+          </div>
+          <div className="bfx-menu-search">
+            <div style={{ position: "relative", width: "100%" }}>
               <input className="bfx-searchbox" value={query} onChange={(e) => setQuery(e.target.value)}
                 placeholder="Buscá… (humita, cuchillo, membrillo)" aria-label="Buscar en el menú" />
               {query && (
@@ -59,55 +41,47 @@ function MenuPage({ go }) {
                 </button>
               )}
             </div>
-            {isHappyNow() && <span className="bfx-badge bfx-badge--green" style={{ "--rot": "-4deg", fontSize: 15 }}>PROMO MEDIODÍA ACTIVA</span>}
+            <p className="bfx-hand bfx-menu-sub">
+              Al horno o fritas, al mismo precio · Delivery propio o take away
+              {isHappyNow() && <span className="bfx-badge bfx-badge--green" style={{ "--rot": "-4deg", fontSize: 13, marginLeft: 10 }}>PROMO MEDIODÍA ACTIVA</span>}
+            </p>
           </div>
         </div>
       </section>
 
-      {/* pills sticky */}
+      {/* pestañas sticky */}
       <div className="bfx-catbar">
-        <div className="wrap" style={{ display: "flex", gap: 8, padding: "12px 24px", overflowX: "auto" }}>
-          {visible.map((c) => (
-            <button key={c.id} onClick={() => jump(c.id)} className={"bfx-catpill" + (active === c.id ? " on" : "")}>
-              {c.name}
+        <div className="bfx-menu-wrap" style={{ display: "flex", gap: 8, padding: "10px 24px", overflowX: "auto" }}>
+          {MENU.map((c) => (
+            <button key={c.id} onClick={() => { setActive(c.id); setQuery(""); }}
+              className={"bfx-catpill" + (!q && active === c.id ? " on" : "")} aria-pressed={!q && active === c.id}>
+              {c.name} <span className="n">{c.items.length}</span>
             </button>
           ))}
         </div>
       </div>
 
-      {/* categorías */}
-      <div className="wrap" style={{ padding: "10px 24px 80px" }}>
-        {visible.length === 0 && (
-          <div style={{ padding: "80px 0", textAlign: "center" }}>
-            <Sticker name="pickle" size={90} style={{ position: "relative", margin: "0 auto 16px" }} />
-            <p className="bfx-bubble" style={{ fontSize: 34, margin: "0 0 8px", color: "var(--bfx-brand)", "--bfx-counter": "var(--bfx-cream)" }}>Nada con “{query}”</p>
-            <p className="bfx-copy" style={{ margin: "0 0 22px" }}>Probá con otra palabra, o mirá la carta completa.</p>
-            <button className="bfx-blob" style={{ fontSize: 20 }} onClick={() => setQuery("")}>Ver todo el menú</button>
+      <div className="bfx-menu-wrap" style={{ padding: "18px 24px 60px" }}>
+        {shown.length === 0 && (
+          <div style={{ padding: "50px 0", textAlign: "center" }}>
+            <Sticker name="aceituna" size={80} style={{ position: "relative", margin: "0 auto 14px" }} />
+            <p className="bfx-bubble" style={{ fontSize: 30, margin: "0 0 8px", color: "var(--bfx-brand)", "--bfx-counter": "var(--bfx-cream)" }}>Nada con “{query}”</p>
+            <p className="bfx-copy" style={{ margin: "0 0 18px" }}>Probá con otra palabra, o mirá la carta completa.</p>
+            <button className="bfx-blob" style={{ fontSize: 18 }} onClick={() => setQuery("")}>Ver todo el menú</button>
           </div>
         )}
 
-        {visible.map((cat) => (
-          <section key={cat.id} data-cat={cat.id} ref={(el) => (refs.current[cat.id] = el)} style={{ paddingTop: 54 }}>
-            <div style={{ display: "flex", alignItems: "baseline", gap: 16, flexWrap: "wrap" }}>
-              <h2 className="bfx-giant bfx-giant--md" style={{ fontSize: "clamp(34px,4.6vw,64px)" }}>{cat.name}</h2>
-              <span className="bfx-hand" style={{ fontSize: 17, letterSpacing: ".1em", textTransform: "uppercase", opacity: .55 }}>
-                {cat.items.length} {cat.items.length === 1 ? "opción" : "opciones"}
-              </span>
+        {shown.map((cat) => (
+          <section key={cat.id} className="bfx-menu-cat" aria-label={cat.name}>
+            <div className="bfx-menu-cathead">
+              {q && <h2 className="bfx-giant" style={{ fontSize: "clamp(26px,2.6vw,36px)" }}>{cat.name}</h2>}
+              <span className="bfx-hand kick">{cat.kicker}</span>
+              {cat.note && <span className="bfx-hand note"><Ic.leaf style={{ color: "var(--bfx-green)", flexShrink: 0 }} /> {cat.note}</span>}
             </div>
-            <p className="bfx-hand" style={{ fontSize: 19, letterSpacing: ".06em", textTransform: "uppercase", color: "var(--bfx-mustard)", margin: "6px 0 6px" }}>{cat.kicker}</p>
-            {cat.note && (
-              <p className="bfx-copy" style={{ fontSize: 18, margin: "0 0 10px", maxWidth: 640, display: "flex", gap: 8, alignItems: "center" }}>
-                <Ic.leaf style={{ color: "var(--bfx-green)", flexShrink: 0 }} /> {cat.note}
-              </p>
-            )}
 
             {cat.layout === "cards" && (
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 22, marginTop: 18 }} className="bf-grid-3">
-                {cat.items.map((item, i) => (
-                  <Reveal key={item.id} delay={(i % 3) * 70} style={{ display: "grid" }}>
-                    <MenuCard item={item} rot={((i % 3) - 1) * 1.2} />
-                  </Reveal>
-                ))}
+              <div className="bfx-menu-grid">
+                {cat.items.map((item, i) => <MenuCard key={item.id} item={item} />)}
               </div>
             )}
             {cat.layout === "taps" && <BeerGrid items={cat.items} />}
@@ -118,14 +92,13 @@ function MenuPage({ go }) {
         ))}
       </div>
 
-      <AntojoCTA go={go} />
       <MobileCartBar go={go} />
     </main>
   );
 }
 
 /* ---------- Card de producto (clara, estilo sticker) ---------- */
-function MenuCard({ item, rot = 0 }) {
+function MenuCard({ item }) {
   const store = useStore();
   const stock = store.getStock()[item.id] ?? 99;
   const out = stock <= 0;
@@ -138,7 +111,7 @@ function MenuCard({ item, rot = 0 }) {
   const customize = () => { if (!out) window.dispatchEvent(new CustomEvent("bf-customize", { detail: item.id })); };
   const TAG_CLS = { TOP: "bfx-minitag", TIRADA: "bfx-minitag--ylw", "PROMO VIERNES": "bfx-minitag--green" };
   return (
-    <div className="bfx-menucard" style={{ opacity: out ? .55 : 1, rotate: rot + "deg" }}>
+    <div className="bfx-menucard" style={{ opacity: out ? .55 : 1 }}>
       <div className="photo">
         <img src={(item.img) || "assets/horno-tabla.jpg"} alt={item.name} loading="lazy" />
         <div style={{ position: "absolute", top: 10, left: 10, display: "flex", gap: 6 }}>
@@ -152,22 +125,21 @@ function MenuCard({ item, rot = 0 }) {
           </div>
         )}
       </div>
-      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 10 }}>
-        <div className="name">{item.name}</div>
-        <div style={{ display: "flex", gap: 8 }}>
+      {/* compacta: nombre, descripción en 2 líneas y abajo precio + sumar */}
+      <div className="name">{item.name}</div>
+      <div className="desc" title={item.desc}>{item.desc}</div>
+      <div className="foot">
+        <span className="price">{money(item.price)}</span>
+        <div style={{ display: "flex", gap: 6 }}>
           {item.custom && (
             <button className="bfx-addbtn ghost" disabled={out} onClick={customize} aria-label={"Personalizar " + item.name}>
-              <Ic.sliders width={17} height={17} />
+              <Ic.sliders width={15} height={15} />
             </button>
           )}
           <button className="bfx-addbtn" disabled={out} onClick={item.custom ? customize : quickAdd} aria-label={"Sumar " + item.name}>
-            <Ic.plus width={19} height={19} />
+            <Ic.plus width={17} height={17} />
           </button>
         </div>
-      </div>
-      <div className="desc">{item.desc}</div>
-      <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 8 }}>
-        <span className="price">{money(item.price)}</span>
       </div>
     </div>
   );

@@ -163,7 +163,12 @@ input:focus, textarea:focus, select:focus{ outline:none; }
 /* ============================================================
    v2 — motion & surface upgrades
    ============================================================ */
-html{ scroll-behavior:smooth; }
+/* SIN scroll-behavior:smooth. ScrollTrigger, al re-medir, salta a scroll 0,
+   mide y vuelve; con smooth ese salto se anima y no ocurre, así que mide con
+   la página scrolleada y guarda posiciones corridas (la moto del delivery no
+   arrancaba si refrescaba con la página ya scrolleada). El scroll suave lo
+   da Lenis y los saltos internos van por FX.scrollTo. */
+html{ scroll-behavior:auto; }
 .display{ text-wrap:balance; }
 
 /* --- Scroll reveal (IntersectionObserver agrega .in) --- */
