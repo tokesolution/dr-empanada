@@ -1924,3 +1924,14 @@ body.bfx-admin *::-webkit-scrollbar-thumb:hover{ background: rgba(246,232,210,.3
 @media (prefers-reduced-motion: reduce){ .bfx-ptile > img, .bfx-fadeimg{ animation:none; } }
 /* la tarjeta de promo se estira al alto de la fila: todas iguales */
 .bfx-pgrid > .bfx-promotile{ aspect-ratio: auto; height: 100%; box-sizing: border-box; }
+
+/* fila sticky: pestañas a la izquierda, buscador (+ aclaración) a la derecha */
+.bfx-catrow{ display:flex; align-items:center; justify-content:space-between; gap: 14px 28px; padding: 12px 24px; flex-wrap: wrap; }
+.bfx-menu-head{ grid-template-columns: 1fr; }
+.bfx-catrow .bfx-menu-search{ flex: 0 1 540px; min-width: 280px; }
+.bfx-catrow .bfx-searchbox{ padding-top: 11px; padding-bottom: 9px; font-size: 17px; }
+.bfx-catrow .bfx-menu-sub{ margin: 6px 0 0 18px; font-size: 13.5px; }
+@media (max-width: 760px){
+  .bfx-catrow .bfx-menu-search{ flex-basis: 100%; min-width: 0; }
+  .bfx-catrow .bfx-menu-sub{ display:none; }
+}

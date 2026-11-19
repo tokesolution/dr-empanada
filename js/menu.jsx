@@ -31,6 +31,25 @@ function MenuPage({ go }) {
               <span data-split="chars">ELEGÍ, SUMÁ </span><span data-split="chars" className="ylw">Y LISTO.</span>
             </h1>
           </div>
+        </div>
+      </section>
+
+      {/* pestañas sticky: control segmentado con un sticker por categoría */}
+      <div className="bfx-catbar">
+        {/* pestañas a la izquierda y buscador a la derecha, en la misma fila */}
+        <div className="bfx-menu-wrap bfx-catrow">
+          <div className="bfx-segmented" role="tablist" aria-label="Categorías">
+            {MENU.map((c) => {
+              const on = !q && active === c.id;
+              return (
+                <button key={c.id} role="tab" aria-selected={on} onClick={() => { setActive(c.id); setQuery(""); }}
+                  className={"bfx-seg" + (on ? " on" : "")}>
+                  <span className="ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: (window.FX && FX.STICKERS[CAT_ICON[c.id]]) || "" }} />
+                  {c.name} <span className="n">{c.items.length}</span>
+                </button>
+              );
+            })}
+          </div>
           <div className="bfx-menu-search">
             <div className="bfx-searchwrap">
               <svg className="ico" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
@@ -44,24 +63,6 @@ function MenuPage({ go }) {
               Al horno o fritas, al mismo precio · Delivery propio o take away
               {isHappyNow() && <span className="bfx-badge bfx-badge--green" style={{ "--rot": "-4deg", fontSize: 13, marginLeft: 10 }}>PROMO MEDIODÍA ACTIVA</span>}
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* pestañas sticky: control segmentado con un sticker por categoría */}
-      <div className="bfx-catbar">
-        <div className="bfx-menu-wrap" style={{ padding: "10px 24px" }}>
-          <div className="bfx-segmented" role="tablist" aria-label="Categorías">
-            {MENU.map((c) => {
-              const on = !q && active === c.id;
-              return (
-                <button key={c.id} role="tab" aria-selected={on} onClick={() => { setActive(c.id); setQuery(""); }}
-                  className={"bfx-seg" + (on ? " on" : "")}>
-                  <span className="ic" aria-hidden="true" dangerouslySetInnerHTML={{ __html: (window.FX && FX.STICKERS[CAT_ICON[c.id]]) || "" }} />
-                  {c.name} <span className="n">{c.items.length}</span>
-                </button>
-              );
-            })}
           </div>
         </div>
       </div>
