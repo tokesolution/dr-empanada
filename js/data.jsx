@@ -138,19 +138,19 @@ const MENU = [
     layout: "cards",
     note: "Todas se pueden pedir al horno o fritas, al mismo precio. La docena puede ser surtida.",
     items: [
-      { id: "carne-cuchillo", name: "Carne Cuchillo", desc: "Carne cortada a cuchillo, cebolla y morrón. La insignia de la casa.", price: 2700, priceDouble: 29000, tags: ["TOP"], custom: true, color: "#8a5a2b", pop: 96, img: "assets/empanadas/carne-cuchillo.jpg" },
-      { id: "carne-suave", name: "Carne Suave", desc: "Carne molida bien condimentada, jugosa y pareja.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#9c6b33", pop: 78, img: "assets/empanadas/carne-suave.jpg" },
-      { id: "vacio", name: "Vacío", desc: "Vacío braseado y desmechado, cocido a fuego lento.", price: 2700, priceDouble: 29000, tags: [], custom: true, color: "#7a4a22", pop: 82, img: "assets/empanadas/vacio.jpg" },
-      { id: "bondiola-bbq", name: "Bondiola BBQ", desc: "Bondiola desmechada con salsa barbacoa.", price: 2700, priceDouble: 29000, tags: [], custom: true, color: "#a3541e", pop: 80, img: "assets/empanadas/bondiola-bbq.jpg" },
-      { id: "pollo", name: "Pollo", desc: "Pollo desmenuzado con verduritas salteadas.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#d9a441", pop: 77, img: "assets/empanadas/pollo.jpg" },
-      { id: "cheese", name: "Cheese", desc: "Estilo cheeseburger: carne y cheddar fundido.", price: 2700, priceDouble: 29000, tags: ["TOP"], custom: true, color: "#e8a51e", pop: 88, img: "assets/empanadas/cheese.jpg" },
-      { id: "matambre-pizza", name: "Matambre a la Pizza", desc: "Matambre tiernizado, salsa de tomate, muzza y orégano.", price: 2700, priceDouble: 29000, tags: ["TOP"], custom: true, color: "#c74a2e", pop: 90, img: "assets/empanadas/matambre-pizza.jpg" },
-      { id: "cebolla-queso", name: "Cebolla y Queso", desc: "Cebolla dorada lenta con muzzarella cremosa.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#e8c96a", pop: 74, img: "assets/empanadas/cebolla-queso.jpg" },
-      { id: "provolone", name: "Provolone", desc: "Provolone fundido que se estira, con un toque de orégano.", price: 2700, priceDouble: 29000, tags: [], custom: true, color: "#f0d9a8", pop: 75, img: "assets/empanadas/provolone.jpg" },
-      { id: "roque", name: "Roque", desc: "Roquefort, muzzarella y jamón. Para los que saben.", price: 2700, priceDouble: 29000, tags: [], custom: true, color: "#b9c69a", pop: 72, img: "assets/empanadas/roque.jpg" },
-      { id: "humita", name: "Humita", desc: "Choclo cremoso con salsa blanca casera. Un clásico eterno.", price: 2400, priceDouble: 26000, tags: ["TOP"], custom: true, color: "#f2cf5b", pop: 85, img: "assets/empanadas/humita.jpg" },
-      { id: "caprese", name: "Caprese", desc: "Muzzarella, tomate y albahaca fresca.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#d94f3d", pop: 73, img: "assets/empanadas/caprese.jpg" },
-      { id: "verdura", name: "Verdura", desc: "Acelga, salsa blanca y muzzarella. Verde y cremosa.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#6faa3c", pop: 66, img: "assets/empanadas/verdura.jpg" },
+      { id: "carne-cuchillo", name: "Carne Cuchillo", desc: "Carne cortada a cuchillo, cebolla y morrón. La insignia de la casa.", price: 2700, priceDouble: 29000, tags: ["TOP"], custom: true, color: "#8a5a2b", pop: 96, img: "assets/empanadas/carne-cuchillo-frita.webp", imgHorno: "assets/empanadas/carne-cuchillo-horno.webp" },
+      { id: "carne-suave", name: "Carne Suave", desc: "Carne molida bien condimentada, jugosa y pareja.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#9c6b33", pop: 78, img: "assets/empanadas/carne-suave-frita.webp", imgHorno: "assets/empanadas/carne-suave-horno.webp" },
+      { id: "vacio", name: "Vacío", desc: "Vacío braseado y desmechado, cocido a fuego lento.", price: 2700, priceDouble: 29000, tags: [], custom: true, color: "#7a4a22", pop: 82, img: "assets/empanadas/vacio-frita.webp", imgHorno: "assets/empanadas/vacio-horno.webp" },
+      { id: "bondiola-bbq", name: "Bondiola BBQ", desc: "Bondiola desmechada con salsa barbacoa.", price: 2700, priceDouble: 29000, tags: [], custom: true, color: "#a3541e", pop: 80, img: "assets/empanadas/bondiola-bbq-frita.webp" },
+      { id: "pollo", name: "Pollo", desc: "Pollo desmenuzado con verduritas salteadas.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#d9a441", pop: 77, img: "assets/empanadas/pollo-frita.webp", imgHorno: "assets/empanadas/pollo-horno.webp" },
+      { id: "cheese", name: "Cheese", desc: "Estilo cheeseburger: carne y cheddar fundido.", price: 2700, priceDouble: 29000, tags: ["TOP"], custom: true, color: "#e8a51e", pop: 88, img: "assets/empanadas/cheese-frita.webp", imgHorno: "assets/empanadas/cheese-horno.webp" },
+      { id: "matambre-pizza", name: "Matambre a la Pizza", desc: "Matambre tiernizado, salsa de tomate, muzza y orégano.", price: 2700, priceDouble: 29000, tags: ["TOP"], custom: true, color: "#c74a2e", pop: 90, img: "assets/empanadas/matambre-pizza-frita.webp", imgHorno: "assets/empanadas/matambre-pizza-horno.webp" },
+      { id: "cebolla-queso", name: "Cebolla y Queso", desc: "Cebolla dorada lenta con muzzarella cremosa.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#e8c96a", pop: 74, img: "assets/empanadas/cebolla-queso-frita.webp", imgHorno: "assets/empanadas/cebolla-queso-horno.webp" },
+      { id: "provolone", name: "Provolone", desc: "Provolone fundido que se estira, con un toque de orégano.", price: 2700, priceDouble: 29000, tags: [], custom: true, color: "#f0d9a8", pop: 75, img: "assets/empanadas/provolone-frita.webp", imgHorno: "assets/empanadas/provolone-horno.webp" },
+      { id: "roque", name: "Roque", desc: "Roquefort, muzzarella y jamón. Para los que saben.", price: 2700, priceDouble: 29000, tags: [], custom: true, color: "#b9c69a", pop: 72, img: "assets/empanadas/roque-frita.webp" },
+      { id: "humita", name: "Humita", desc: "Choclo cremoso con salsa blanca casera. Un clásico eterno.", price: 2400, priceDouble: 26000, tags: ["TOP"], custom: true, color: "#f2cf5b", pop: 85, img: "assets/empanadas/humita-frita.webp", imgHorno: "assets/empanadas/humita-horno.webp" },
+      { id: "caprese", name: "Caprese", desc: "Muzzarella, tomate y albahaca fresca.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#d94f3d", pop: 73, img: "assets/empanadas/caprese-frita.webp", imgHorno: "assets/empanadas/caprese-horno.webp" },
+      { id: "verdura", name: "Verdura", desc: "Acelga, salsa blanca y muzzarella. Verde y cremosa.", price: 2400, priceDouble: 26000, tags: [], custom: true, color: "#6faa3c", pop: 66, img: "assets/empanadas/verdura-frita.webp", imgHorno: "assets/empanadas/verdura-horno.webp" },
     ],
   },
   {
@@ -199,8 +199,20 @@ const PROMO_VIERNES = { price: 27000 };
    /api/menu-images devuelve { idProducto: url }. Si la API no responde
    (por ejemplo en local sin Functions) quedan las fotos de assets/. */
 const IMG_OVERRIDES = {};
-const menuImg = (item) => (item && (IMG_OVERRIDES[item.id] || item.img)) || null;
-const itemImg = (item) => menuImg(item) || "assets/horno-tabla.jpg";
+
+/* Cada empanada tiene foto FRITA (item.img) y AL HORNO (item.imgHorno; si
+   falta se usa la frita). El cliente elige cómo verlas desde el menú y la
+   elección se recuerda. Una foto subida desde el panel manda sobre ambas. */
+const COCCION_KEY = "bf_coccion";
+let COCCION = (function () { try { return localStorage.getItem(COCCION_KEY) === "frita" ? "frita" : "horno"; } catch (e) { return "horno"; } })();
+const getCoccion = () => COCCION;
+function setCoccion(v) {
+  COCCION = v === "frita" ? "frita" : "horno";
+  try { localStorage.setItem(COCCION_KEY, COCCION); } catch (e) {}
+  window.dispatchEvent(new Event("bf-menu-images"));
+}
+const menuImg = (item, mode) => (item && (IMG_OVERRIDES[item.id] || ((mode || COCCION) === "horno" && item.imgHorno) || item.img)) || null;
+const itemImg = (item, mode) => menuImg(item, mode) || "assets/horno-tabla.jpg";
 function loadMenuImages() {
   return fetch("/api/menu-images", { cache: "no-store" })
     .then((r) => (r.ok && (r.headers.get("content-type") || "").includes("json") ? r.json() : {}))
@@ -310,7 +322,7 @@ const Ic = {
 };
 
 Object.assign(window, {
-  ENV, PROD_HOST, IMG_OVERRIDES, menuImg, itemImg, loadMenuImages,
+  ENV, PROD_HOST, IMG_OVERRIDES, menuImg, itemImg, loadMenuImages, getCoccion, setCoccion,
   BIZ, MENU, FLAT_ITEMS, findItem, REVIEWS, money, Empanada, Cloche, Logo, LogoBadge, Ic, IMG,
   EXTRAS, MEDALLONES, PROTEINAS, HAPPY, PROMO_VIERNES,
   SHIPPING, SENA_PCT, COUPONS, findCoupon, couponDiscount, couponLabel,

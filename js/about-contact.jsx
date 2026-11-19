@@ -70,13 +70,13 @@ function Nosotros({ go }) {
   const story = [
     { n: "01", tag: "MASA CASERA", cls: "bfx-badge--green", img: "assets/horno-tabla.jpg", txt: "Masa propia estirada en el día: finita, elástica y con el punto justo de horno." },
     { n: "02", tag: "RELLENO GENEROSO", cls: "bfx-badge--red", img: "assets/carne-corte.jpg", txt: "Carne cortada a cuchillo, cebolla dorada lenta y rellenos que se cocinan a fuego lento." },
-    { n: "03", tag: "QUESO QUE SE ESTIRA", cls: "", img: "assets/empanadas/provolone.jpg", txt: "Muzzarella, provolone y cheddar de verdad, que se funden y se estiran en cada bocado." },
+    { n: "03", tag: "QUESO QUE SE ESTIRA", cls: "", img: "assets/empanadas/provolone-horno.webp", txt: "Muzzarella, provolone y cheddar de verdad, que se funden y se estiran en cada bocado." },
     { n: "04", tag: "REPULGUE A MANO", cls: "bfx-badge--red", img: "assets/repulgue.jpg", txt: "Cada empanada cerrada a mano, con el repulgue de siempre. Así se distingue cada sabor." },
     { n: "05", tag: "PASTELITOS CROCANTES", cls: "bfx-badge--green", img: "assets/pastelitos-membrillo.jpg", txt: "Hojaldre frito y crocante con membrillo, batata o dulce de leche. El final obligado." },
   ];
   const years = new Date().getFullYear() - BIZ.since;
-  const reel = ["assets/horno-fila.jpg", "assets/empanadas/carne-cuchillo.jpg", "assets/pastelitos-enteros.jpg", "assets/humita-corte.jpg",
-    "assets/promo-bandeja.jpg", "assets/vacio-mano.jpg", "assets/caprese-mano.jpg", "assets/media-docena.jpg"];
+  const reel = ["assets/horno-fila.jpg", "assets/empanadas/carne-cuchillo-frita.webp", "assets/pastelitos-enteros.jpg", "assets/empanadas/humita-horno.webp",
+    "assets/promo-bandeja.jpg", "assets/empanadas/vacio-horno.webp", "assets/empanadas/caprese-frita.webp", "assets/empanadas/cheese-horno.webp"];
 
   return (
     <main ref={ref} className="bfx bfx-about">

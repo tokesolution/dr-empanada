@@ -1,8 +1,8 @@
 /* ============================================================
    menu.jsx — La carta, pensada para pedir rápido:
    cabecera compacta, buscador, categorías como pestañas y una
-   grilla "bento" con tarjetas a foto completa (nombre y precio
-   sobre la imagen). Mantiene carrito, customizer y stock.
+   grilla pareja y a todo el ancho con tarjetas a foto completa
+   (nombre y precio sobre la imagen) y selector horno/frita. Mantiene carrito, customizer y stock.
    ============================================================ */
 function MenuPage({ go }) {
   const store = useStore();
@@ -77,20 +77,31 @@ function MenuPage({ go }) {
         )}
 
         {shown.map((cat) => {
-          // bento solo para empanadas sin búsqueda: la más pedida grande + tile de promo
-          const bento = !q && cat.id === "empanadas";
+          // en empanadas (sin búsqueda): selector horno/frita + tile de promo al final
+          const isEmp = !q && cat.id === "empanadas";
           return (
             <section key={cat.id + (q ? "-q" : "")} className="bfx-menu-cat bfx-fadein" aria-label={cat.name}>
               <div className="bfx-menu-cathead">
                 {q && <h2 className="bfx-giant" style={{ fontSize: "clamp(26px,2.6vw,36px)" }}>{cat.name}</h2>}
                 <span className="bfx-hand kick">{cat.kicker}</span>
                 {cat.note && <span className="bfx-hand note"><Ic.leaf style={{ color: "var(--bfx-green)", flexShrink: 0 }} /> {cat.note}</span>}
+                {(cat.id === "empanadas" || q) && (
+                  <div className="bfx-coccion" role="radiogroup" aria-label="Ver fotos al horno o fritas">
+                    <span className="lbl">Mirá cómo salen:</span>
+                    {[["horno", "Al horno"], ["frita", "Fritas"]].map(([v, l]) => (
+                      <button key={v} type="button" role="radio" aria-checked={getCoccion() === v}
+                        className={"opt" + (getCoccion() === v ? " on" : "")} onClick={() => setCoccion(v)}>
+                        {v === "frita" && <Ic.fire width={14} height={14} />} {l}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
 
               {cat.layout === "cards" && (
-                <div className={"bfx-pgrid" + (bento ? " bfx-pgrid--bento" : "")}>
-                  {cat.items.map((item, i) => <ProductTile key={item.id} item={item} featured={bento && i === 0} index={i} />)}
-                  {bento && promo && (
+                <div className="bfx-pgrid">
+                  {cat.items.map((item, i) => <ProductTile key={item.id} item={item} top={isEmp && i === 0} index={i} />)}
+                  {isEmp && promo && (
                     <button type="button" className="bfx-promotile" onClick={() => setActive("promos")}>
                       <Sticker name="emp" size={84} style={{ position: "absolute", right: 14, top: 12, "--rot": "10deg" }} />
                       <span className="k">Para la juntada</span>
@@ -118,7 +129,7 @@ function MenuPage({ go }) {
 /* ---------- Tarjeta de producto: foto completa + info encima ----------
    La foto ocupa toda la tarjeta y un degradé oscuro abajo deja leer el
    nombre y el precio sobre la imagen (como las apps de delivery). */
-function ProductTile({ item, featured = false, index = 0 }) {
+function ProductTile({ item, top = false, index = 0 }) {
   const store = useStore();
   const stock = store.getStock()[item.id] ?? 99;
   const out = stock <= 0;
@@ -131,13 +142,13 @@ function ProductTile({ item, featured = false, index = 0 }) {
   const customize = () => { if (!out) window.dispatchEvent(new CustomEvent("bf-customize", { detail: item.id })); };
   const TAG_TXT = { TOP: "★ Top" };
   return (
-    <article className={"bfx-ptile" + (featured ? " is-featured" : "") + (out ? " is-out" : "")}
-      style={{ "--i": index }}>
-      <img src={itemImg(item)} alt={item.name} loading={index < 8 ? "eager" : "lazy"} />
+    <article className={"bfx-ptile" + (out ? " is-out" : "")} style={{ "--i": index }}>
+      {/* key = src: al cambiar horno/frita la foto se monta de nuevo y entra con fundido */}
+      <img key={itemImg(item)} src={itemImg(item)} alt={item.name} loading={index < 10 ? "eager" : "lazy"} />
       <div className="shade" aria-hidden="true" />
       <div className="tags">
-        {featured && <span className="tag tag--hot">La más pedida</span>}
-        {item.tags.filter((t) => !(featured && t === "TOP")).map((t) => <span key={t} className="tag">{TAG_TXT[t] || t}</span>)}
+        {top && <span className="tag tag--hot">La más pedida</span>}
+        {item.tags.filter((t) => !(top && t === "TOP")).map((t) => <span key={t} className="tag">{TAG_TXT[t] || t}</span>)}
       </div>
       {out && <div className="soldout"><span>Sin stock</span></div>}
       <div className="info">

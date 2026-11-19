@@ -50,10 +50,10 @@ function Stars({ value = 5, size = 16 }) {
 
 /* ---------- Photo (foto real con skeleton + fallback icónico) ---------- */
 const KIND_IMG = {
-  burger: "assets/empanadas/carne-cuchillo.jpg",
+  burger: "assets/empanadas/carne-cuchillo-frita.webp",
   beer: "assets/promo-bandeja.jpg",
   fries: "assets/pastelitos-membrillo.jpg",
-  ribs: "assets/empanadas/vacio.jpg",
+  ribs: "assets/empanadas/vacio-frita.webp",
   drink: "assets/promo-docena.jpg",
   promo: "assets/promo-docena.jpg",
   combo: "assets/tabla-carne.jpg",
@@ -361,7 +361,7 @@ function Customizer() {
       const it = findItem(d.id);
       if (!it) return;
       cbRef.current = d.cb || null; // modo POS: entrega la línea a un callback en vez del carrito
-      setItem(it); setSize("single"); setMedallon(MEDALLONES[0]); setProtein(PROTEINAS[0]);
+      setItem(it); setSize("single"); setMedallon(getCoccion() === "frita" ? "Frita" : MEDALLONES[0]); setProtein(PROTEINAS[0]);
       setExtras([]); setQty(1);
     };
     window.addEventListener("bf-customize", onOpen);
@@ -410,7 +410,7 @@ function Customizer() {
       <div className="bfx-modal" role="dialog" aria-modal="true" aria-label={"Personalizar " + item.name}>
         {/* header foto */}
         <div className="bfx-modal-head">
-          <img src={itemImg(item)} alt={item.name} />
+          <img key={medallon} className="bfx-fadeimg" src={itemImg(item, medallon === "Frita" ? "frita" : "horno")} alt={item.name} />
           <div className="veil" />
           <button className="bfx-modal-close" onClick={() => setItem(null)} aria-label="Cerrar"><Ic.x /></button>
           <div className="ttl">

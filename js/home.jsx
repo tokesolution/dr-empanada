@@ -139,9 +139,9 @@ function Home({ go }) {
   const marqueeMsgs = Array(6).fill("Promociones todas las semanas");
 
   const polaroids = [
-    { img: IMG_OVERRIDES["carne-cuchillo"] || "assets/empanadas/carne-cuchillo.jpg", name: "Carne Cuchillo", price: money(2700), rot: -5 },
-    { img: IMG_OVERRIDES["cheese"] || "assets/empanadas/cheeseburger.jpg", name: "Cheeseburger", price: money(2700), rot: 3 },
-    { img: IMG_OVERRIDES["matambre-pizza"] || "assets/empanadas/matambre-pizza.jpg", name: "Matambre a la Pizza", price: money(2700), rot: 6 },
+    { img: itemImg(findItem("carne-cuchillo")), name: "Carne Cuchillo", price: money(2700), rot: -5 },
+    { img: itemImg(findItem("cheese")), name: "Cheeseburger", price: money(2700), rot: 3 },
+    { img: itemImg(findItem("matambre-pizza")), name: "Matambre a la Pizza", price: money(2700), rot: 6 },
   ];
 
   /* Barrios: van como chips SOBRE el recorrido punteado.
